@@ -89,11 +89,11 @@ export default function Feed({ onPostModalChange }: Props) {
         Top
       </button>
     </div>
-    <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 p-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
       {sorted.map((post) => (
         <div
           key={post.id}
-          className="break-inside-avoid mb-4 bg-neutral-900 rounded-2xl overflow-hidden shadow-lg cursor-pointer"
+          className="bg-neutral-900 rounded-2xl overflow-hidden shadow-lg cursor-pointer"
           onClick={() => openPost(post)}
         >
           <div className="relative">
@@ -107,7 +107,16 @@ export default function Feed({ onPostModalChange }: Props) {
             )}
           </div>
           <div className="p-4">
-            <p className="text-neutral-500 text-xs mb-1">{post.authorEmail.replace('@freepost.local', '')}</p>
+            <p className="text-neutral-500 text-xs mb-1">
+              {post.authorEmail.replace('@freepost.local', '')}
+              {' • '}
+              {(() => {
+                const d = new Date(post.createdAt)
+                const date = d.toISOString().slice(0, 10)
+                const time = d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: false })
+                return `${date} ${time}`
+              })()}
+            </p>
             <h3 className="text-white font-semibold text-base">{post.title}</h3>
             {post.description && <p className="text-neutral-400 text-sm mt-1">{post.description}</p>}
             <div className="flex items-center gap-3 mt-3">
