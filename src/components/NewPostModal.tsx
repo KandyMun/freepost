@@ -1,8 +1,10 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { collection, addDoc } from 'firebase/firestore'
+import { collection, addDoc, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { storage, db } from '../firebase'
 import { useAuth } from '../AuthContext'
+
+const COOLDOWN_MS = 2 * 60 * 1000
 
 interface Props {
   onClose: () => void
@@ -21,7 +23,23 @@ export default function NewPostModal({ onClose, onPosted }: Props) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
   const [dragging, setDragging] = useState(false)
+  const [cooldownLeft, setCooldownLeft] = useState(0)
   const fileRef = useRef<HTMLInputElement>(null)
+
+  useEffect(() => {
+    if (!user) return
+    getDoc(doc(db, 'users', user.uid)).then((snap) => {
+      const lastPost = snap.data()?.lastPostAt ?? 0
+      const remaining = COOLDOWN_MS - (Date.now() - lastPost)
+      if (remaining > 0) setCooldownLeft(Math.ceil(remaining / 1000))
+    })
+  }, [user])
+
+  useEffect(() => {
+    if (cooldownLeft <= 0) return
+    const t = setTimeout(() => setCooldownLeft((s) => s - 1), 1000)
+    return () => clearTimeout(t)
+  }, [cooldownLeft])
 
   function processFile(f: File) {
     if (f.size > MAX_SIZE) {
@@ -66,6 +84,7 @@ export default function NewPostModal({ onClose, onPosted }: Props) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!file || !user) return
+    if (cooldownLeft > 0) return
     setError('')
     setLoading(true)
     try {
@@ -84,6 +103,7 @@ export default function NewPostModal({ onClose, onPosted }: Props) {
         authorEmail: user.email,
         createdAt: Date.now(),
       })
+      await updateDoc(doc(db, 'users', user.uid), { lastPostAt: Date.now() })
       onPosted()
       onClose()
     } catch (err: unknown) {
@@ -137,10 +157,10 @@ export default function NewPostModal({ onClose, onPosted }: Props) {
           {error && <p className="text-red-400 text-sm">{error}</p>}
           <button
             type="submit"
-            disabled={loading || !file || !title}
+            disabled={loading || !file || !title || cooldownLeft > 0}
             className="bg-violet-600 hover:bg-violet-500 disabled:opacity-40 text-white font-medium rounded-lg py-2.5 transition-colors"
           >
-            {loading ? 'Uploading…' : 'Post'}
+            {loading ? 'Uploading…' : cooldownLeft > 0 ? `Wait ${cooldownLeft}s` : 'Post'}
           </button>
         </form>
       </div>
