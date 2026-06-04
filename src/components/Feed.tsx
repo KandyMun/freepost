@@ -1,5 +1,8 @@
-import { useEffect, useState } from 'react'
-import { collection, query, orderBy, onSnapshot, deleteDoc, doc } from 'firebase/firestore'
+import { useEffect, useRef, useState } from 'react'
+import {
+  collection, query, orderBy, getDocs, deleteDoc, doc,
+  limit, startAfter, type QueryDocumentSnapshot,
+} from 'firebase/firestore'
 import { ref, deleteObject } from 'firebase/storage'
 import { db, storage } from '../firebase'
 import { type Post } from '../types'
@@ -7,20 +10,62 @@ import { useIsAdmin } from '../useIsAdmin'
 import PostModal from './PostModal'
 import LikeBar from './LikeBar'
 
+const PAGE_SIZE = 15
+
 type SortMode = 'chronological' | 'likes'
 
 interface Props {
   onPostModalChange?: (open: boolean) => void
+  frozen?: boolean
 }
 
-export default function Feed({ onPostModalChange }: Props) {
+export default function Feed({ onPostModalChange, frozen }: Props) {
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+  const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot | null>(null)
   const [confirmId, setConfirmId] = useState<string | null>(null)
   const [deleting, setDeleting] = useState(false)
   const [selected, setSelected] = useState<Post | null>(null)
   const [sort, setSort] = useState<SortMode>('chronological')
+  const [search, setSearch] = useState('')
+  const sentinelRef = useRef<HTMLDivElement>(null)
   const isAdmin = useIsAdmin()
+
+  async function fetchPage(after: QueryDocumentSnapshot | null, sortMode: SortMode) {
+    const order = sortMode === 'likes'
+      ? orderBy('likeCount', 'desc')
+      : orderBy('createdAt', 'desc')
+    const q = after
+      ? query(collection(db, 'posts'), order, startAfter(after), limit(PAGE_SIZE))
+      : query(collection(db, 'posts'), order, limit(PAGE_SIZE))
+    const snap = await getDocs(q)
+    const newPosts = snap.docs.map((d) => ({ id: d.id, ...d.data() } as Post))
+    setPosts((prev) => after ? [...prev, ...newPosts] : newPosts)
+    setLastDoc(snap.docs[snap.docs.length - 1] ?? null)
+    setHasMore(snap.docs.length === PAGE_SIZE)
+  }
+
+  useEffect(() => {
+    setLoading(true)
+    setPosts([])
+    setLastDoc(null)
+    setHasMore(true)
+    fetchPage(null, sort).then(() => setLoading(false))
+  }, [sort])
+
+  useEffect(() => {
+    if (!sentinelRef.current) return
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting && hasMore && !loadingMore && !loading) {
+        setLoadingMore(true)
+        fetchPage(lastDoc, sort).finally(() => setLoadingMore(false))
+      }
+    }, { rootMargin: '200px' })
+    observer.observe(sentinelRef.current)
+    return () => observer.disconnect()
+  }, [hasMore, loadingMore, loading, lastDoc])
 
   function openPost(post: Post) {
     setSelected(post)
@@ -32,33 +77,20 @@ export default function Feed({ onPostModalChange }: Props) {
     onPostModalChange?.(false)
   }
 
-  useEffect(() => {
-    const q = query(collection(db, 'posts'), orderBy('createdAt', 'desc'))
-    return onSnapshot(q, (snap) => {
-      setPosts(snap.docs.map((d) => ({ id: d.id, ...d.data() } as Post)))
-      setLoading(false)
-    })
-  }, [])
-
   async function handleDelete(post: Post) {
     setDeleting(true)
     await deleteDoc(doc(db, 'posts', post.id))
     if (post.storagePath) {
       try { await deleteObject(ref(storage, post.storagePath)) } catch { /* ignore */ }
     }
+    setPosts((prev) => prev.filter((p) => p.id !== post.id))
     setConfirmId(null)
     setDeleting(false)
   }
 
-  const [search, setSearch] = useState('')
-
-  const filtered = search.trim()
+  const sorted = search.trim()
     ? posts.filter((p) => p.title.toLowerCase().includes(search.toLowerCase().trim()))
     : posts
-
-  const sorted = sort === 'likes'
-    ? [...filtered].sort((a, b) => (b.likedBy?.length ?? 0) - (a.likedBy?.length ?? 0))
-    : filtered
 
   if (loading) return <div className="text-neutral-500 text-center py-20">Loading…</div>
   if (posts.length === 0) return <div className="text-neutral-500 text-center py-20">No posts yet. Be the first!</div>
@@ -120,7 +152,7 @@ export default function Feed({ onPostModalChange }: Props) {
             <h3 className="text-white font-semibold text-base">{post.title}</h3>
             {post.description && <p className="text-neutral-400 text-sm mt-1">{post.description}</p>}
             <div className="flex items-center gap-3 mt-3">
-              <LikeBar post={post} />
+              <LikeBar post={post} frozen={frozen} />
               <span className="text-neutral-500 text-sm">💬 {post.commentCount ?? 0}</span>
             </div>
             <div className="flex items-center justify-end mt-1">
@@ -155,7 +187,11 @@ export default function Feed({ onPostModalChange }: Props) {
         </div>
       ))}
     </div>
-    {selected && <PostModal post={selected} onClose={closePost} />}
+    <div ref={sentinelRef} className="py-4 text-center">
+      {loadingMore && <span className="text-neutral-500 text-sm">Loading…</span>}
+      {!hasMore && posts.length > 0 && <span className="text-neutral-700 text-sm">No more posts</span>}
+    </div>
+    {selected && <PostModal post={selected} onClose={closePost} frozen={frozen} />}
     </>
   )
 }

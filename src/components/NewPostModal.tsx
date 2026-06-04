@@ -99,6 +99,7 @@ export default function NewPostModal({ onClose, onPosted }: Props) {
         storagePath,
         isVideo,
         commentCount: 0,
+        likeCount: 0,
         authorId: user.uid,
         authorEmail: user.email ?? '',
         createdAt: Date.now(),

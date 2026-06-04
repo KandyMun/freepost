@@ -20,11 +20,12 @@ interface Props {
   post: Post
   onClose: () => void
   scrollToComments?: boolean
+  frozen?: boolean
 }
 
 const MAX = 160
 
-export default function PostModal({ post: initialPost, onClose, scrollToComments }: Props) {
+export default function PostModal({ post: initialPost, onClose, scrollToComments, frozen }: Props) {
   const { user } = useAuth()
   const [post, setPost] = useState<Post>(initialPost)
   const [comments, setComments] = useState<Comment[]>([])
@@ -66,6 +67,7 @@ export default function PostModal({ post: initialPost, onClose, scrollToComments
       createdAt: Date.now(),
     })
     await updateDoc(doc(db, 'posts', post.id), { commentCount: increment(1) })
+    console.log('commenter uid:', user.uid, '| post authorId:', post.authorId, '| same?', user.uid === post.authorId)
     if (user.uid !== post.authorId) {
       await addDoc(collection(db, 'notifications'), {
         userId: post.authorId,
@@ -76,6 +78,9 @@ export default function PostModal({ post: initialPost, onClose, scrollToComments
         createdAt: Date.now(),
         read: false,
       })
+      console.log('notification created for', post.authorId)
+    } else {
+      console.log('skipped notification: commenter is post author')
     }
     setText('')
     setSubmitting(false)
@@ -122,7 +127,7 @@ export default function PostModal({ post: initialPost, onClose, scrollToComments
             {post.description
               ? <p className="text-neutral-400 text-sm whitespace-pre-wrap">{post.description}</p>
               : <span />}
-            <LikeBar post={post} />
+            <LikeBar post={post} frozen={frozen} />
           </div>
 
         {/* Comments */}
@@ -189,24 +194,30 @@ export default function PostModal({ post: initialPost, onClose, scrollToComments
 
         {/* Comment input */}
         <form onSubmit={handleSubmit} className="p-4 border-t border-neutral-800 shrink-0 flex flex-col gap-2">
-          <textarea
-            placeholder="Write a comment…"
-            value={text}
-            onChange={(e) => setText(e.target.value.slice(0, MAX))}
-            onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitComment() } }}
-            rows={2}
-            className="bg-neutral-800 text-white text-sm rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-violet-500 placeholder:text-neutral-600 resize-none"
-          />
-          <div className="flex items-center justify-between">
-            <span className="text-neutral-600 text-xs">{text.length}/{MAX}</span>
-            <button
-              type="submit"
-              disabled={submitting || !text.trim()}
-              className="bg-violet-600 hover:bg-violet-500 disabled:opacity-40 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors"
-            >
-              {submitting ? 'Posting…' : 'Comment'}
-            </button>
-          </div>
+          {frozen ? (
+            <p className="text-red-400 text-sm text-center py-1">The site is frozen. Comments are disabled.</p>
+          ) : (
+            <>
+              <textarea
+                placeholder="Write a comment…"
+                value={text}
+                onChange={(e) => setText(e.target.value.slice(0, MAX))}
+                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitComment() } }}
+                rows={2}
+                className="bg-neutral-800 text-white text-sm rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-violet-500 placeholder:text-neutral-600 resize-none"
+              />
+              <div className="flex items-center justify-between">
+                <span className="text-neutral-600 text-xs">{text.length}/{MAX}</span>
+                <button
+                  type="submit"
+                  disabled={submitting || !text.trim()}
+                  className="bg-violet-600 hover:bg-violet-500 disabled:opacity-40 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors"
+                >
+                  {submitting ? 'Posting…' : 'Comment'}
+                </button>
+              </div>
+            </>
+          )}
         </form>
       </div>
     </div>

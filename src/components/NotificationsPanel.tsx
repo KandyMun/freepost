@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from 'react'
-import { collection, query, where, orderBy, onSnapshot, doc, updateDoc, getDoc } from 'firebase/firestore'
+import { collection, query, where, orderBy, onSnapshot, doc, updateDoc, deleteDoc, getDoc } from 'firebase/firestore'
 import { db } from '../firebase'
 import { useAuth } from '../AuthContext'
 import { type Post } from '../types'
-import PostModal from './PostModal'
 
 interface Notification {
   id: string
@@ -15,11 +14,14 @@ interface Notification {
   read: boolean
 }
 
-export default function NotificationsPanel() {
+interface Props {
+  onOpenPost: (post: Post) => void
+}
+
+export default function NotificationsPanel({ onOpenPost }: Props) {
   const { user } = useAuth()
   const [notifs, setNotifs] = useState<Notification[]>([])
   const [open, setOpen] = useState(false)
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null)
   const panelRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -52,7 +54,7 @@ export default function NotificationsPanel() {
     }
     const snap = await getDoc(doc(db, 'posts', notif.postId))
     if (snap.exists()) {
-      setSelectedPost({ id: snap.id, ...snap.data() } as Post)
+      onOpenPost({ id: snap.id, ...snap.data() } as Post)
     }
     setOpen(false)
   }
@@ -77,47 +79,68 @@ export default function NotificationsPanel() {
         <div className="absolute right-0 top-8 w-80 bg-neutral-900 border border-neutral-800 rounded-2xl shadow-2xl z-50 overflow-hidden">
           <div className="px-4 py-3 border-b border-neutral-800 flex items-center justify-between">
             <span className="text-white font-semibold text-sm">Notifications</span>
-            {unread > 0 && (
-              <button
-                onClick={async () => {
-                  for (const n of notifs.filter((n) => !n.read)) {
-                    await updateDoc(doc(db, 'notifications', n.id), { read: true })
-                  }
-                }}
-                className="text-neutral-500 hover:text-white text-xs transition-colors"
-              >
-                Mark all read
-              </button>
-            )}
+            <div className="flex items-center gap-3">
+              {unread > 0 && (
+                <button
+                  onClick={async () => {
+                    for (const n of notifs.filter((n) => !n.read)) {
+                      await updateDoc(doc(db, 'notifications', n.id), { read: true })
+                    }
+                  }}
+                  className="text-neutral-500 hover:text-white text-xs transition-colors"
+                >
+                  Mark all read
+                </button>
+              )}
+              {notifs.length > 0 && (
+                <button
+                  onClick={async () => {
+                    for (const n of notifs) {
+                      await deleteDoc(doc(db, 'notifications', n.id))
+                    }
+                  }}
+                  className="text-neutral-500 hover:text-red-400 text-xs transition-colors"
+                >
+                  Clear all
+                </button>
+              )}
+            </div>
           </div>
           <div className="max-h-80 overflow-y-auto">
             {notifs.length === 0 ? (
               <p className="text-neutral-500 text-sm text-center py-6">No notifications yet.</p>
             ) : (
               notifs.map((n) => (
-                <button
+                <div
                   key={n.id}
-                  onClick={() => handleNotifClick(n)}
-                  className={`w-full text-left px-4 py-3 border-b border-neutral-800 last:border-0 hover:bg-neutral-800 transition-colors ${!n.read ? 'bg-neutral-800/50' : ''}`}
+                  className={`flex items-start border-b border-neutral-800 last:border-0 ${!n.read ? 'bg-neutral-800/50' : ''}`}
                 >
-                  <p className="text-white text-xs font-medium truncate">
-                    <span className="text-violet-400">{n.commenterUsername}</span>
-                    {' commented on '}
-                    <span className="text-neutral-300">{n.postTitle}</span>
-                  </p>
-                  <p className="text-neutral-500 text-xs mt-0.5 truncate">"{n.commentPreview}"</p>
-                  <p className="text-neutral-600 text-xs mt-1">{new Date(n.createdAt).toISOString().slice(0, 10)}</p>
-                  {!n.read && <span className="inline-block w-1.5 h-1.5 bg-violet-500 rounded-full mt-1" />}
-                </button>
+                  <button
+                    onClick={() => handleNotifClick(n)}
+                    className="flex-1 text-left px-4 py-3 hover:bg-neutral-800 transition-colors"
+                  >
+                    <p className="text-white text-xs font-medium truncate">
+                      <span className="text-violet-400">{n.commenterUsername}</span>
+                      {' commented on '}
+                      <span className="text-neutral-300">{n.postTitle}</span>
+                    </p>
+                    <p className="text-neutral-500 text-xs mt-0.5 truncate">"{n.commentPreview}"</p>
+                    <p className="text-neutral-600 text-xs mt-1">{new Date(n.createdAt).toISOString().slice(0, 10)}</p>
+                    {!n.read && <span className="inline-block w-1.5 h-1.5 bg-violet-500 rounded-full mt-1" />}
+                  </button>
+                  <button
+                    onClick={() => deleteDoc(doc(db, 'notifications', n.id))}
+                    className="px-3 py-3 text-neutral-600 hover:text-red-400 text-xs transition-colors shrink-0"
+                  >
+                    ✕
+                  </button>
+                </div>
               ))
             )}
           </div>
         </div>
       )}
 
-      {selectedPost && (
-        <PostModal post={selectedPost} onClose={() => setSelectedPost(null)} scrollToComments />
-      )}
     </div>
   )
 }
