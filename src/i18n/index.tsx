@@ -4,7 +4,7 @@ import en from './locales/en'
 
 export type Locale = 'lt' | 'en'
 
-const locales = { lt, en }
+const locales: Record<Locale, Strings> = { lt, en }
 
 type Strings = typeof lt
 
