@@ -3,6 +3,7 @@ const en = {
   nav_feed: 'Feed',
   nav_changelog: 'Changelog',
   nav_myposts: 'My posts',
+  nav_profile: 'Profile',
   nav_users: 'Users',
   nav_signin: 'Sign in',
   nav_signout: 'Sign out',
@@ -75,6 +76,7 @@ const en = {
   auth_go_signup: 'Sign up',
   auth_go_signin: 'Sign in',
   auth_err_generic: 'Something went wrong',
+  auth_err_username_taken: 'That username is already taken.',
 
   // My posts
   myposts_empty: "You haven't posted anything yet.",
@@ -91,6 +93,8 @@ const en = {
   users_joined: (date: string) => `Joined ${date}`,
   users_ban: 'Ban',
   users_unban: 'Unban',
+  users_search_placeholder: 'Search users by username…',
+  users_roles: 'Roles',
 
   // Notifications
   notif_button: '🔔 Notifications',
@@ -104,6 +108,21 @@ const en = {
   // Changelog
   changelog_title: 'Changelog',
   changelog_current: (v: string) => `current: ${v}`,
+
+  // Profile
+  profile_not_found: 'User not found.',
+  profile_joined: (date: string) => `Joined ${date}`,
+  profile_about_title: 'About me',
+  profile_no_about: 'This user hasn’t written anything about themselves yet.',
+  profile_about_placeholder: 'Tell people about yourself…',
+  profile_edit_picture: 'Change picture',
+  profile_uploading: 'Uploading…',
+  profile_save: 'Save',
+  profile_saving: 'Saving…',
+  profile_saved: 'Saved',
+  profile_your_profile: 'This is your profile',
+  profile_roles_manage: 'Manage roles',
+  profile_roles_hint: 'Admin only. Click a role to assign or remove it for this user.',
 }
 
 export default en

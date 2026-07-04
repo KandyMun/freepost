@@ -1,6 +1,7 @@
 import VERSION from '../version'
 import { useI18n } from '../i18n'
-import raw from '../../CHANGELOG.md?raw'
+import rawLt from '../../CHANGELOG.md?raw'
+import rawEn from '../../CHANGELOG.en.md?raw'
 
 function parseChangelog(text: string) {
   const sections: { version: string; date: string; groups: Record<string, string[]> }[] = []
@@ -35,6 +36,7 @@ const GROUP_COLORS: Record<string, string> = {
   Fixed: 'text-yellow-400',
   Removed: 'text-red-400',
   Security: 'text-violet-400',
+  'System changes': 'text-violet-400',
   // Lithuanian
   Pridėta: 'text-emerald-400',
   Pakeista: 'text-blue-400',
@@ -43,11 +45,12 @@ const GROUP_COLORS: Record<string, string> = {
   Saugumas: 'text-violet-400',
   Pataisymai: 'text-yellow-400',
   Pakeitimai: 'text-blue-400',
+  'Sisteminiai pokyčiai': 'text-violet-400',
 }
 
 export default function ChangelogPage() {
-  const { t } = useI18n()
-  const sections = parseChangelog(raw)
+  const { t, locale } = useI18n()
+  const sections = parseChangelog(locale === 'en' ? rawEn : rawLt)
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">

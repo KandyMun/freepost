@@ -3,6 +3,7 @@ const lt = {
   nav_feed: 'Srautas',
   nav_changelog: 'Atnaujinimai',
   nav_myposts: 'Mano įrašai',
+  nav_profile: 'Profilis',
   nav_users: 'Vartotojai',
   nav_signin: 'Prisijungti',
   nav_signout: 'Atsijungti',
@@ -79,6 +80,7 @@ const lt = {
   auth_go_signup: 'Registruotis',
   auth_go_signin: 'Prisijungti',
   auth_err_generic: 'Kažkas nepavyko',
+  auth_err_username_taken: 'Toks vartotojo vardas jau užimtas.',
 
   // My posts
   myposts_empty: 'Dar nieko nepaskelbėte.',
@@ -95,6 +97,8 @@ const lt = {
   users_joined: (date: string) => `Prisijungė ${date}`,
   users_ban: 'Užblokuoti',
   users_unban: 'Atblokuoti',
+  users_search_placeholder: 'Ieškoti naudotojų pagal vardą…',
+  users_roles: 'Rolės',
 
   // Notifications
   notif_button: '🔔 Pranešimai',
@@ -108,6 +112,21 @@ const lt = {
   // Changelog
   changelog_title: 'Atnaujinimai',
   changelog_current: (v: string) => `dabartinė: ${v}`,
+
+  // Profile
+  profile_not_found: 'Vartotojas nerastas.',
+  profile_joined: (date: string) => `Prisijungė ${date}`,
+  profile_about_title: 'Apie mane',
+  profile_no_about: 'Šis vartotojas dar nieko apie save neparašė.',
+  profile_about_placeholder: 'Papasakokite apie save…',
+  profile_edit_picture: 'Keisti nuotrauką',
+  profile_uploading: 'Įkeliama…',
+  profile_save: 'Išsaugoti',
+  profile_saving: 'Išsaugoma…',
+  profile_saved: 'Išsaugota',
+  profile_your_profile: 'Tai jūsų profilis',
+  profile_roles_manage: 'Tvarkyti roles',
+  profile_roles_hint: 'Tik administratoriui. Spustelėkite rolę, kad ją priskirtumėte ar pašalintumėte šiam naudotojui.',
 }
 
 export default lt

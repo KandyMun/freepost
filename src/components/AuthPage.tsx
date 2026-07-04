@@ -3,7 +3,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth'
-import { doc, setDoc } from 'firebase/firestore'
+import { doc, setDoc, collection, query, where, getDocs } from 'firebase/firestore'
 import { auth, db } from '../firebase'
 import { useI18n } from '../i18n'
 
@@ -23,17 +23,27 @@ export default function AuthPage({ onSuccess }: Props) {
     e.preventDefault()
     setError('')
     setLoading(true)
-    const email = `${username.toLowerCase().trim()}@freepost.local`
+    const uname = username.toLowerCase().trim()
+    const email = `${uname}@freepost.local`
     try {
       if (mode === 'login') {
         await signInWithEmailAndPassword(auth, email, password)
         onSuccess?.()
       } else {
+        const taken = await getDocs(query(collection(db, 'users'), where('username', '==', uname)))
+        if (!taken.empty) {
+          setError(t.auth_err_username_taken)
+          setLoading(false)
+          return
+        }
         const { user } = await createUserWithEmailAndPassword(auth, email, password)
         await setDoc(doc(db, 'users', user.uid), {
-          username: username.toLowerCase().trim(),
+          username: uname,
           createdAt: Date.now(),
           banned: false,
+          photoURL: '',
+          about: '',
+          roles: [],
         })
         onSuccess?.()
       }

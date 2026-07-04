@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { Link } from 'react-router-dom'
 import {
   collection, query, orderBy, getDocs, deleteDoc, doc, onSnapshot, updateDoc, where,
   limit, startAfter, type QueryDocumentSnapshot,
@@ -10,6 +11,7 @@ import { useIsAdmin } from '../useIsAdmin'
 import { useI18n } from '../i18n'
 import PostModal from './PostModal'
 import LikeBar from './LikeBar'
+import Avatar from './Avatar'
 import Spinner from './Spinner'
 
 const PAGE_SIZE = 15
@@ -153,16 +155,25 @@ export default function Feed({ onPostModalChange, frozen }: Props) {
           )}
         </div>
         <div className="p-4">
-          <p className="text-neutral-500 text-xs mb-1">
-            {post.authorEmail.replace('@freepost.local', '')}
-            {' • '}
-            {(() => {
-              const d = new Date(post.createdAt)
-              const date = d.toISOString().slice(0, 10)
-              const time = d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: false })
-              return `${date} ${time}`
-            })()}
-          </p>
+          <div className="flex items-center gap-1.5 text-neutral-500 text-xs mb-1">
+            <Link
+              to={`/u/${post.authorEmail.replace('@freepost.local', '')}`}
+              onClick={(e) => e.stopPropagation()}
+              className="flex items-center gap-1.5 hover:text-violet-400"
+            >
+              <Avatar username={post.authorEmail.replace('@freepost.local', '')} size={20} />
+              <span className="hover:underline">{post.authorEmail.replace('@freepost.local', '')}</span>
+            </Link>
+            <span>
+              {' • '}
+              {(() => {
+                const d = new Date(post.createdAt)
+                const date = d.toISOString().slice(0, 10)
+                const time = d.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit', hour12: false })
+                return `${date} ${time}`
+              })()}
+            </span>
+          </div>
           <h3 className="text-white font-semibold text-base">{post.title}</h3>
           {post.description && <p className="text-neutral-400 text-sm mt-1">{post.description}</p>}
           <div className="flex items-center gap-3 mt-3">

@@ -1,5 +1,21 @@
 # Changelog
 
+## [v0.1.2] - 2026-07-04
+
+### Pridėta
+- Vartotojų profiliai: kiekvienas naudotojas turi savo puslapį (/u/vartotojas), kuriame rodomas jo vardas, prisijungimo data, profilio nuotrauka ir „Apie mane" skiltis.
+- Profilio savininkas gali įsikelti profilio nuotrauką ir redaguoti „Apie mane" tekstą.
+- Autorių vardai įrašuose ir komentaruose tapo nuorodomis į jų profilius, šalia rodoma maža profilio nuotrauka.
+- Naudotojų rolės: po naudotojo vardu profilyje gali būti rodomi spalvoti rolių ženkleliai. Rolės išverstos į lietuvių ir anglų kalbas.
+- Profilio nuotraukai taikomi tokie patys apribojimai kaip įrašams (iki 15MB, iki 5000×5000). GIF formatas palaikomas.
+
+### Pakeista
+- Atsijungimo, profilio ir „Mano įrašai" mygtukai suglausti į profilio nuotraukos ikoną viršuje dešinėje — ją paspaudus atsiveria meniu su profiliu, savo įrašais ir atsijungimu. Prisijungimo mygtukas nepakito.
+
+### Sisteminiai pokyčiai
+- Registruojantis patikrinama, ar pasirinktas vartotojo vardas dar neužimtas.
+- Pakeitus profilio nuotrauką, senoji automatiškai ištrinama iš saugyklos, kad būtų taupoma vieta.
+
 ## [v0.1.1] - 2026-06-06
 
 ### Pakeista
