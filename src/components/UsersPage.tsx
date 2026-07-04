@@ -10,6 +10,7 @@ import Spinner from './Spinner'
 interface UserRecord {
   id: string
   username: string
+  displayName?: string
   createdAt: number
   banned: boolean
   roles?: string[]
@@ -47,8 +48,13 @@ export default function UsersPage() {
 
   if (loading) return <div className="flex justify-center py-20"><Spinner /></div>
 
-  const filtered = search.trim()
-    ? users.filter((u) => u.username.toLowerCase().includes(search.toLowerCase().trim()))
+  const q = search.toLowerCase().trim()
+  const filtered = q
+    ? users.filter(
+        (u) =>
+          u.username.toLowerCase().includes(q) ||
+          (u.displayName ?? '').toLowerCase().includes(q),
+      )
     : users
 
   return (
@@ -78,9 +84,12 @@ export default function UsersPage() {
           <div className="flex items-center justify-between">
             <div className="min-w-0">
               <p className={`font-medium ${u.banned ? 'text-neutral-500 line-through' : 'text-white'}`}>
-                {u.username}
+                {u.displayName || u.username}
                 {u.id === user?.uid && <span className="text-neutral-600 text-xs ml-2">{t.users_you}</span>}
               </p>
+              {u.displayName && u.displayName !== u.username && (
+                <p className="text-neutral-500 text-xs">@{u.username}</p>
+              )}
               <p className="text-neutral-600 text-xs mt-0.5">
                 {t.users_joined(new Date(u.createdAt).toISOString().slice(0, 10))}
               </p>

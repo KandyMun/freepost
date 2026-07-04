@@ -7,19 +7,25 @@ import { useAuth } from '../AuthContext'
 import { useI18n } from '../i18n'
 import { invalidateProfile } from '../userProfiles'
 import { getRole } from '../roles'
+import type { CustomLink } from '../socials'
 import ProfilePosts from './ProfilePosts'
+import { SocialLinksRow, SocialLinksEditor } from './SocialLinks'
 import Spinner from './Spinner'
 
 interface Profile {
   uid: string
   username: string
+  displayName?: string
   about?: string
   photoURL?: string
   createdAt?: number
   roles?: string[]
+  socials?: Record<string, string>
+  customLinks?: CustomLink[]
 }
 
 const MAX_ABOUT = 500
+const MAX_NAME = 32
 const MAX_SIZE = 15 * 1024 * 1024
 const MAX_DIM = 5000
 
@@ -51,6 +57,10 @@ export default function ProfilePage() {
   const [about, setAbout] = useState('')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [editingName, setEditingName] = useState(false)
+  const [name, setName] = useState('')
+  const [savingName, setSavingName] = useState(false)
+  const [previewMode, setPreviewMode] = useState(false)
   const [uploading, setUploading] = useState(false)
   const [picError, setPicError] = useState('')
   const fileRef = useRef<HTMLInputElement>(null)
@@ -76,6 +86,8 @@ export default function ProfilePage() {
   }, [username])
 
   const isOwner = !!user && !!profile && user.uid === profile.uid
+  // Owner-only editing controls are hidden while previewing as a visitor.
+  const showOwnerControls = isOwner && !previewMode
 
   async function handlePickPicture(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -121,11 +133,49 @@ export default function ProfilePage() {
     }
   }
 
+  // Save the chosen display name. Empty input resets it to the Discord username.
+  async function handleSaveName() {
+    if (!profile) return
+    const next = name.trim().slice(0, MAX_NAME) || profile.username
+    setSavingName(true)
+    try {
+      await updateDoc(doc(db, 'users', profile.uid), { displayName: next })
+      setProfile((p) => (p ? { ...p, displayName: next } : p))
+      invalidateProfile(profile.username)
+      setEditingName(false)
+    } finally {
+      setSavingName(false)
+    }
+  }
+
+  function startEditName() {
+    if (!profile) return
+    setName(profile.displayName || profile.username)
+    setEditingName(true)
+  }
+
   if (loading) return <div className="flex justify-center py-20"><Spinner /></div>
   if (!profile) return <div className="text-neutral-500 text-center py-20">{t.profile_not_found}</div>
 
   return (
     <div className="max-w-2xl mx-auto p-4">
+      {isOwner && (
+        <div className="flex items-center justify-between gap-3 mb-4 bg-neutral-900 rounded-2xl px-4 py-2.5">
+          <span className="text-neutral-400 text-sm">
+            {previewMode ? t.profile_preview_banner : t.profile_preview_hint}
+          </span>
+          <button
+            onClick={() => { setPreviewMode((v) => !v); setEditingName(false) }}
+            className={`text-sm font-medium px-4 py-1.5 rounded-lg transition-colors shrink-0 ${
+              previewMode
+                ? 'bg-violet-600 hover:bg-violet-500 text-white'
+                : 'bg-neutral-800 hover:bg-neutral-700 text-neutral-200'
+            }`}
+          >
+            {previewMode ? t.profile_preview_exit : t.profile_preview}
+          </button>
+        </div>
+      )}
       <div className="bg-neutral-900 rounded-2xl p-6 flex flex-col items-center text-center">
         <div className="relative">
           {profile.photoURL ? (
@@ -139,7 +189,7 @@ export default function ProfilePage() {
               {profile.username.charAt(0).toUpperCase()}
             </div>
           )}
-          {isOwner && (
+          {showOwnerControls && (
             <>
               <button
                 onClick={() => fileRef.current?.click()}
@@ -159,7 +209,51 @@ export default function ProfilePage() {
           )}
         </div>
 
-        <h1 className="text-white text-2xl font-semibold mt-4">{profile.username}</h1>
+        {editingName && showOwnerControls ? (
+          <div className="flex flex-col items-center gap-2 mt-4 w-full max-w-xs">
+            <input
+              value={name}
+              onChange={(e) => setName(e.target.value.slice(0, MAX_NAME))}
+              placeholder={profile.username}
+              maxLength={MAX_NAME}
+              autoFocus
+              className="w-full text-center bg-neutral-800 text-white text-xl font-semibold rounded-xl px-4 py-2 outline-none focus:ring-2 focus:ring-violet-500"
+            />
+            <div className="flex items-center gap-3">
+              <span className="text-neutral-600 text-xs">{name.trim().length}/{MAX_NAME}</span>
+              <button
+                onClick={() => setEditingName(false)}
+                className="text-neutral-400 hover:text-neutral-200 text-sm"
+              >
+                {t.cancel}
+              </button>
+              <button
+                onClick={handleSaveName}
+                disabled={savingName}
+                className="bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 text-white text-sm font-medium px-4 py-1.5 rounded-lg transition-colors"
+              >
+                {savingName ? t.profile_saving : t.profile_save}
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 mt-4">
+            <h1 className="text-white text-2xl font-semibold">{profile.displayName || profile.username}</h1>
+            {showOwnerControls && (
+              <button
+                onClick={startEditName}
+                title={t.profile_name_edit}
+                aria-label={t.profile_name_edit}
+                className="text-neutral-500 hover:text-violet-400 text-sm transition-colors"
+              >
+                ✎
+              </button>
+            )}
+          </div>
+        )}
+        {(profile.displayName || profile.username) !== profile.username && (
+          <p className="text-neutral-500 text-sm">@{profile.username}</p>
+        )}
         {profile.roles && profile.roles.length > 0 && (
           <div className="flex flex-wrap justify-center gap-1.5 mt-2">
             {profile.roles.map((id) => {
@@ -173,18 +267,19 @@ export default function ProfilePage() {
             })}
           </div>
         )}
+        <SocialLinksRow socials={profile.socials} customLinks={profile.customLinks} />
         {profile.createdAt && (
-          <p className="text-neutral-500 text-sm mt-1">
+          <p className="text-neutral-500 text-sm mt-3">
             {t.profile_joined(new Date(profile.createdAt).toISOString().slice(0, 10))}
           </p>
         )}
-        {isOwner && <p className="text-neutral-600 text-xs mt-1">{t.profile_your_profile}</p>}
+        {showOwnerControls && <p className="text-neutral-600 text-xs mt-1">{t.profile_your_profile}</p>}
         {picError && <p className="text-red-400 text-sm mt-2">{picError}</p>}
       </div>
 
       <div className="bg-neutral-900 rounded-2xl p-6 mt-4">
         <h2 className="text-neutral-300 font-medium mb-3">{t.profile_about_title}</h2>
-        {isOwner ? (
+        {showOwnerControls ? (
           <div className="flex flex-col gap-2">
             <textarea
               value={about}
@@ -213,6 +308,21 @@ export default function ProfilePage() {
           <p className="text-neutral-600 text-sm italic">{t.profile_no_about}</p>
         )}
       </div>
+
+      {showOwnerControls && (
+        <div className="bg-neutral-900 rounded-2xl p-6 mt-4">
+          <h2 className="text-neutral-300 font-medium mb-3">{t.profile_links_title}</h2>
+          <SocialLinksEditor
+            uid={profile.uid}
+            username={profile.username}
+            initialSocials={profile.socials}
+            initialCustom={profile.customLinks}
+            onSaved={(socials, customLinks) =>
+              setProfile((p) => (p ? { ...p, socials, customLinks } : p))
+            }
+          />
+        </div>
+      )}
 
       <ProfilePosts uid={profile.uid} />
     </div>

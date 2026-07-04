@@ -125,10 +125,24 @@ const lt = {
   profile_saving: 'Išsaugoma…',
   profile_saved: 'Išsaugota',
   profile_your_profile: 'Tai jūsų profilis',
+  profile_name_edit: 'Keisti rodomą vardą',
+  profile_preview: 'Peržiūrėti kaip lankytojas',
+  profile_preview_exit: 'Baigti peržiūrą',
+  profile_preview_hint: 'Pažiūrėkite, kaip jūsų profilį mato kiti.',
+  profile_preview_banner: 'Peržiūra — taip jūsų profilį mato lankytojai.',
   profile_posts_title: 'Įrašai',
   profile_posts_empty: 'Įrašų dar nėra.',
   profile_roles_manage: 'Tvarkyti roles',
   profile_roles_hint: 'Tik administratoriui. Spustelėkite rolę, kad ją priskirtumėte ar pašalintumėte šiam naudotojui.',
+
+  // Profile — socialiniai tinklai
+  profile_links_title: 'Socialiniai tinklai',
+  profile_links_custom_title: 'Pasirinktinės nuorodos',
+  profile_links_add: '+ Pridėti nuorodą',
+  profile_links_custom_label: 'Pavadinimas',
+  profile_links_hint: 'Palikite laukelį tuščią, kad paslėptumėte nuorodą.',
+  profile_links_err_url: (name: string) => `Įveskite teisingą ${name} nuorodą.`,
+  profile_links_err_incomplete: 'Pasirinktinėms nuorodoms reikia ir pavadinimo, ir nuorodos.',
 }
 
 export default lt

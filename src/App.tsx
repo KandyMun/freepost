@@ -41,15 +41,21 @@ export default function App() {
   const [authError, setAuthError] = useState('')
 
   // Handle the Discord OAuth redirect back to the app (HashRouter-safe).
+  // After sign-in, always land on the main feed rather than wherever the user
+  // started the login from.
   useEffect(() => {
     if (!isDiscordCallback() || discordCallbackHandled) return
     discordCallbackHandled = true
     completeDiscordLogin()
-      .then(() => window.history.replaceState({}, '', import.meta.env.BASE_URL))
+      .then(() => {
+        window.history.replaceState({}, '', import.meta.env.BASE_URL)
+        navigate('/', { replace: true })
+      })
       .catch((e: unknown) => setAuthError(e instanceof Error ? e.message : 'Login failed'))
-  }, [])
+  }, [navigate])
 
   const currentUsername = profile?.username ?? user?.email?.split('@')[0] ?? ''
+  const currentDisplayName = profile?.displayName || currentUsername
 
   if (isDiscordCallback() && !user && !authError) {
     return <div className="min-h-screen bg-neutral-950 flex items-center justify-center"><Spinner /></div>
@@ -74,7 +80,7 @@ export default function App() {
   }
 
   if (showAuth && !user) {
-    return <AuthPage onSuccess={() => setShowAuth(false)} />
+    return <AuthPage onSuccess={() => { setShowAuth(false); navigate('/', { replace: true }) }} />
   }
 
   const navClass = ({ isActive }: { isActive: boolean }) =>
@@ -114,7 +120,7 @@ export default function App() {
               <button
                 onClick={() => setMenuOpen((o) => !o)}
                 className="flex rounded-full ring-2 ring-transparent hover:ring-neutral-600 transition"
-                title={currentUsername}
+                title={currentDisplayName}
               >
                 <Avatar username={currentUsername} size={34} />
               </button>
@@ -124,9 +130,12 @@ export default function App() {
                   <div className="absolute right-0 mt-2 w-52 bg-neutral-900 border border-neutral-800 rounded-xl shadow-xl py-1 z-50">
                     <div className="px-4 py-2.5 border-b border-neutral-800">
                       <p className="text-white text-sm font-medium truncate">
-                        {currentUsername}
+                        {currentDisplayName}
                         {isAdmin && <span title="Admin" className="text-yellow-400 ml-1">★</span>}
                       </p>
+                      {currentDisplayName !== currentUsername && (
+                        <p className="text-neutral-500 text-xs truncate">@{currentUsername}</p>
+                      )}
                     </div>
                     <button
                       onClick={() => { setMenuOpen(false); navigate(`/u/${currentUsername}`) }}
@@ -141,7 +150,7 @@ export default function App() {
                       {t.nav_myposts}
                     </button>
                     <button
-                      onClick={() => { setMenuOpen(false); signOut(auth) }}
+                      onClick={() => { setMenuOpen(false); signOut(auth); navigate('/', { replace: true }) }}
                       className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-neutral-800 transition-colors"
                     >
                       {t.nav_signout}

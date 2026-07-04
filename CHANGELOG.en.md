@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.2.1] - 2026-07-05
+
+### Added
+- Social links on profiles — add YouTube, X, Bluesky, Twitch, Instagram, TikTok, GitHub, Steam, Spotify, and a personal website link.
+- Custom links — up to 5 extra links with your own label.
+- Links show as a row of clickable icons under the username and open in a new tab.
+- Display name — choose any name (up to 32 characters); defaults to your Discord username.
+- Profile preview — toggle a preview on your own profile to see how it looks to other visitors.
+
+### Fixed
+- Signing in or out now always returns you to the main page instead of the last page you were on.
+
 ## [v0.2.0.2] - 2026-07-05
 
 ### Fixed

@@ -5,6 +5,7 @@ import { auth, db } from './firebase'
 
 interface UserProfile {
   username: string
+  displayName?: string
   photoURL?: string
   roles?: string[]
 }

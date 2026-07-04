@@ -6,3 +6,13 @@ body {
   color: #e5e5e5;
   font-family: system-ui, sans-serif;
 }
+
+/* Profile social icons: neutral by default, brand color (from --brand) on hover. */
+.social-icon {
+  color: #a3a3a3;
+  transition: color 0.15s ease, transform 0.15s ease;
+}
+.social-icon:hover {
+  color: var(--brand, #a78bfa);
+  transform: translateY(-1px);
+}

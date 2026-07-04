@@ -5,8 +5,11 @@ import { db } from './firebase'
 export interface PublicProfile {
   uid: string
   username: string
+  displayName?: string
   photoURL?: string
   about?: string
+  socials?: Record<string, string>
+  customLinks?: { label: string; url: string }[]
 }
 
 // Module-level caches so the feed doesn't refetch the same author repeatedly.

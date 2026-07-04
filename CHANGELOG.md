@@ -1,5 +1,17 @@
 # Changelog
 
+## [v0.2.1] - 2026-07-05
+
+### Pridėta
+- Socialinių tinklų nuorodos profilyje — galima nurodyti YouTube, X, Bluesky, Twitch, Instagram, TikTok, GitHub, Steam, Spotify ir asmeninės svetainės nuorodas.
+- Pasirinktinės nuorodos — iki 5 papildomų nuorodų su savo pavadinimu.
+- Nuorodos rodomos kaip spustelėjamų piktogramų eilutė po vartotojo vardu ir atsidaro naujame skirtuke.
+- Rodomas vardas — galima pasirinkti bet kokį vardą (iki 32 simbolių); pagal nutylėjimą naudojamas Discord vardas.
+- Profilio peržiūra — savo profilyje galima įjungti peržiūrą ir pamatyti, kaip jį mato kiti lankytojai.
+
+### Pataisyta
+- Prisijungus arba atsijungus dabar visada grįžtama į pagrindinį puslapį, o ne į paskutinį lankytą puslapį.
+
 ## [v0.2.0.2] - 2026-07-05
 
 ### Pataisyta

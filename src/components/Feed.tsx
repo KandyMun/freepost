@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import {
   collection, query, orderBy, getDocs, deleteDoc, doc, onSnapshot, updateDoc, where,
   limit, startAfter, type QueryDocumentSnapshot,
@@ -12,7 +11,7 @@ import { useIsAdmin } from '../useIsAdmin'
 import { useI18n } from '../i18n'
 import PostModal from './PostModal'
 import LikeBar from './LikeBar'
-import Avatar from './Avatar'
+import { AuthorLink } from './AuthorLink'
 import Spinner from './Spinner'
 
 const PAGE_SIZE = 15
@@ -157,14 +156,7 @@ export default function Feed({ onPostModalChange, frozen }: Props) {
         </div>
         <div className="p-4">
           <div className="flex items-center gap-1.5 text-neutral-500 text-xs mb-1">
-            <Link
-              to={`/u/${authorName(post)}`}
-              onClick={(e) => e.stopPropagation()}
-              className="flex items-center gap-1.5 hover:text-violet-400"
-            >
-              <Avatar username={authorName(post)} size={20} />
-              <span className="hover:underline">{authorName(post)}</span>
-            </Link>
+            <AuthorLink handle={authorName(post)} avatarSize={20} stopPropagation />
             <span>
               {' • '}
               {(() => {

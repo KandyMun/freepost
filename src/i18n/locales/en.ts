@@ -121,10 +121,24 @@ const en = {
   profile_saving: 'Saving…',
   profile_saved: 'Saved',
   profile_your_profile: 'This is your profile',
+  profile_name_edit: 'Edit display name',
+  profile_preview: 'Preview as visitor',
+  profile_preview_exit: 'Exit preview',
+  profile_preview_hint: 'See how your profile looks to others.',
+  profile_preview_banner: "Preview — this is how visitors see your profile.",
   profile_posts_title: 'Posts',
   profile_posts_empty: 'No posts yet.',
   profile_roles_manage: 'Manage roles',
   profile_roles_hint: 'Admin only. Click a role to assign or remove it for this user.',
+
+  // Profile — social links
+  profile_links_title: 'Social links',
+  profile_links_custom_title: 'Custom links',
+  profile_links_add: '+ Add link',
+  profile_links_custom_label: 'Label',
+  profile_links_hint: 'Leave a field empty to hide that link.',
+  profile_links_err_url: (name: string) => `Enter a valid URL for ${name}.`,
+  profile_links_err_incomplete: 'Custom links need both a label and a URL.',
 }
 
 export default en

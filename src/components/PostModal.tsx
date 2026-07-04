@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
-import { Link } from 'react-router-dom'
 import LikeBar from './LikeBar'
-import Avatar from './Avatar'
+import { AuthorLink } from './AuthorLink'
 import {
   collection, query, orderBy, onSnapshot,
   addDoc, doc, updateDoc, increment, getDocs, where, deleteDoc,
@@ -173,13 +172,7 @@ export default function PostModal({ post: initialPost, onClose, scrollToComments
               <div key={c.id} className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
                   <span className="text-neutral-500 text-xs font-medium flex items-center gap-1.5">
-                    <Link
-                      to={`/u/${authorName(c)}`}
-                      className="flex items-center gap-1.5 hover:text-violet-400"
-                    >
-                      <Avatar username={authorName(c)} size={18} />
-                      <span className="hover:underline">{authorName(c)}</span>
-                    </Link>
+                    <AuthorLink handle={authorName(c)} avatarSize={18} />
                     {' • '}
                     {(() => {
                       const d = new Date(c.createdAt)

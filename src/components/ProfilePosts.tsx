@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
 import { collection, query, where, onSnapshot } from 'firebase/firestore'
 import { db } from '../firebase'
 import { type Post } from '../types'
@@ -9,7 +8,7 @@ import { useSiteConfig } from '../useSiteConfig'
 import { useIsAdmin } from '../useIsAdmin'
 import PostModal from './PostModal'
 import LikeBar from './LikeBar'
-import Avatar from './Avatar'
+import { AuthorLink } from './AuthorLink'
 import Spinner from './Spinner'
 
 export default function ProfilePosts({ uid }: { uid: string }) {
@@ -46,7 +45,6 @@ export default function ProfilePosts({ uid }: { uid: string }) {
       ) : (
         <div className="flex flex-col gap-4 w-[70%] mx-auto">
           {posts.map((post) => {
-            const username = authorName(post)
             return (
               <div
                 key={post.id}
@@ -65,14 +63,7 @@ export default function ProfilePosts({ uid }: { uid: string }) {
                 </div>
                 <div className="p-4">
                   <div className="flex items-center gap-1.5 text-neutral-500 text-xs mb-1">
-                    <Link
-                      to={`/u/${username}`}
-                      onClick={(e) => e.stopPropagation()}
-                      className="flex items-center gap-1.5 hover:text-violet-400"
-                    >
-                      <Avatar username={username} size={20} />
-                      <span className="hover:underline">{username}</span>
-                    </Link>
+                    <AuthorLink handle={authorName(post)} avatarSize={20} stopPropagation />
                     <span>
                       {' • '}
                       {(() => {

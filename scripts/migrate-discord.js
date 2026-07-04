@@ -28,11 +28,10 @@ import { resolve, dirname } from 'path'
 import { fileURLToPath } from 'url'
 
 // ─── CONFIG ──────────────────────────────────────────────────────────────────
-const DRY_RUN = true // set to false to actually write
+const DRY_RUN = false // set to false to actually write
 
 // oldUid (random Firebase uid) -> discordId (numeric string)
 const MAPPING = {
-  'H70reK9tgmMBRFOzlFHMuPaG1Qz2': '232581692022456320',
   // 'XyZ789oldFirebaseUid': '987654321098765432',
 }
 // ─────────────────────────────────────────────────────────────────────────────

@@ -84,7 +84,9 @@ export const discordAuth = onRequest(
       if (!snap.exists) {
         await ref.set({
           username: d.username,
-          displayName: d.global_name ?? d.username,
+          // Display name defaults to the Discord username; the user can rename
+          // themselves later without it being reset on the next login.
+          displayName: d.username,
           photoURL, // Discord avatar as the initial default; user can change it later.
           createdAt: Date.now(),
           banned: false,
@@ -92,12 +94,13 @@ export const discordAuth = onRequest(
           roles: [],
         })
       } else {
-        // Returning user: refresh identity fields, but DON'T touch photoURL —
-        // it's user-owned after signup so their custom picture is preserved.
-        await ref.set(
-          { username: d.username, displayName: d.global_name ?? d.username },
-          { merge: true },
-        )
+        // Returning user: keep the Discord username in sync, but DON'T touch
+        // photoURL or displayName — both are user-owned after signup, so their
+        // custom picture and chosen name are preserved. Backfill displayName
+        // only for legacy docs that never had one.
+        const patch: Record<string, unknown> = { username: d.username }
+        if (!snap.data()?.displayName) patch.displayName = d.username
+        await ref.set(patch, { merge: true })
       }
 
       // 4. Mint a Firebase custom token. First sign-in auto-creates the auth user.
