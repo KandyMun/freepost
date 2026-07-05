@@ -1,5 +1,12 @@
 # Changelog
 
+## [v0.2.2] - 2026-07-05
+
+### Added
+- AREDL stats on profiles — shows total points (with packs), completed extreme demon count, hardest demon, and global/country rankings (by points and by demons). Data is fetched automatically from the linked Discord account.
+- The hardest demon is shown as a prominent banner using the level's thumbnail.
+- Link to the user's AREDL profile.
+
 ## [v0.2.1] - 2026-07-05
 
 ### Added

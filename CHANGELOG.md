@@ -1,5 +1,12 @@
 # Changelog
 
+## [v0.2.2] - 2026-07-05
+
+### Pridėta
+- AREDL statistika profilyje — rodoma bendri taškai (su paketais), įveiktų extreme demonų skaičius, sunkiausias demonas ir vietos pasaulyje bei šalyje (pagal taškus ir demonus). Duomenys automatiškai gaunami pagal Discord paskyrą.
+- Sunkiausias demonas rodomas kaip išryškinta juosta su lygio miniatiūra.
+- Nuoroda į vartotojo AREDL profilį.
+
 ## [v0.2.1] - 2026-07-05
 
 ### Pridėta

@@ -135,6 +135,18 @@ const lt = {
   profile_roles_manage: 'Tvarkyti roles',
   profile_roles_hint: 'Tik administratoriui. Spustelėkite rolę, kad ją priskirtumėte ar pašalintumėte šiam naudotojui.',
 
+  // Profile — AREDL statistika
+  aredl_title: 'AREDL statistika',
+  aredl_view: 'Žiūrėti AREDL',
+  aredl_points: 'Taškai',
+  aredl_extremes: 'Extreme demonai',
+  aredl_global: 'Pasaulyje',
+  aredl_country: 'Šalyje',
+  aredl_rank_points: 'Taškai',
+  aredl_rank_demons: 'Demonai',
+  aredl_hardest: 'Sunkiausias demonas',
+  aredl_no_records: 'Kol kas nėra įveiktų.',
+
   // Profile — socialiniai tinklai
   profile_links_title: 'Socialiniai tinklai',
   profile_links_custom_title: 'Pasirinktinės nuorodos',

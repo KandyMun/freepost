@@ -10,6 +10,7 @@ import { getRole } from '../roles'
 import type { CustomLink } from '../socials'
 import ProfilePosts from './ProfilePosts'
 import { SocialLinksRow, SocialLinksEditor } from './SocialLinks'
+import AredlStats from './AredlStats'
 import Spinner from './Spinner'
 
 interface Profile {
@@ -308,6 +309,8 @@ export default function ProfilePage() {
           <p className="text-neutral-600 text-sm italic">{t.profile_no_about}</p>
         )}
       </div>
+
+      <AredlStats username={profile.username} discordId={profile.uid} />
 
       {showOwnerControls && (
         <div className="bg-neutral-900 rounded-2xl p-6 mt-4">

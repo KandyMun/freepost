@@ -131,6 +131,18 @@ const en = {
   profile_roles_manage: 'Manage roles',
   profile_roles_hint: 'Admin only. Click a role to assign or remove it for this user.',
 
+  // Profile — AREDL stats
+  aredl_title: 'AREDL stats',
+  aredl_view: 'View on AREDL',
+  aredl_points: 'Points',
+  aredl_extremes: 'Extreme demons',
+  aredl_global: 'Global',
+  aredl_country: 'Country',
+  aredl_rank_points: 'Points',
+  aredl_rank_demons: 'Demons',
+  aredl_hardest: 'Hardest demon',
+  aredl_no_records: 'No completions yet.',
+
   // Profile — social links
   profile_links_title: 'Social links',
   profile_links_custom_title: 'Custom links',
