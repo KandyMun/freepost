@@ -5,11 +5,14 @@ const CLIENT_ID = import.meta.env.VITE_DISCORD_CLIENT_ID as string
 // Deployed Cloud Function URL, e.g. https://us-central1-<project>.cloudfunctions.net/discordAuth
 const FN_URL = import.meta.env.VITE_DISCORD_FN_URL as string
 
-// Vite base path, e.g. '/freepost/' (always has a trailing slash).
+// Single Discord callback for the whole gdlt-hub. Vite base is '/gdlt-hub/', so
+// this resolves to '/gdlt-hub/auth/discord'. After sign-in the app lands on the
+// hub home page, wherever the login was started from.
 const BASE = import.meta.env.BASE_URL
 const CALLBACK_PATH = `${BASE}auth/discord`
 
-// Must exactly match a redirect added in the Discord OAuth2 tab.
+// Must exactly match a redirect added in the Discord OAuth2 tab:
+// https://kandymun.github.io/gdlt-hub/auth/discord
 export const DISCORD_REDIRECT_URI = `${window.location.origin}${CALLBACK_PATH}`
 
 const STATE_KEY = 'discord_oauth_state'

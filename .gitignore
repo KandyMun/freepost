@@ -30,3 +30,6 @@ functions/*.local
 *.sw?
 .env
 scripts/serviceAccountKey.json
+
+# combined deploy output
+site

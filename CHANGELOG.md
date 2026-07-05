@@ -1,5 +1,28 @@
 # Changelog
 
+## [v0.3] - 2026-07-05
+
+### Pridėta
+- GDLT Hub — naujas pagrindinis puslapis, veikiantis kaip centralizuota vieta bendruomenei. freepost dabar yra viena hub'o dalis, o daugiau bus netrukus.
+- „Apie šį puslapį" puslapis su „Apie" ir „Padėkos" skirtukais; nurodyti žmonės gali būti susieti su savo freepost profiliais ir rodyti savo profilio nuotraukas.
+- Atnaujinimų sąrašas perkeltas į hub'ą, todėl pasiekiamas iš bet kur.
+- Bendra viršutinė juosta kiekviename puslapyje — kalbos perjungimas, pranešimai ir prisijungimas/profilio nuotrauka dabar pasiekiami visur, įskaitant pagrindinį puslapį.
+- Vartotojų paieška freepost'e — galima rasti vartotojus pagal vardą; pagal nutylėjimą rodomi visi vartotojai, o sąrašas siaurėja rašant.
+- Grįžimo mygtukas po antrašte kiekviename puslapyje.
+- Lietuvos vėliavos spalvos „GDLT" užraše.
+- Įkėlimo piktograma, rodoma kol puslapis dar kraunasi.
+
+### Pakeista
+- Švarios nuorodos be „#" (pvz., `/gdlt-hub/freepost` vietoje `/gdlt-hub/#/freepost`).
+- Discord prisijungimas centralizuotas visam hub'ui ir po prisijungimo grąžina į pagrindinį puslapį.
+- Antraštės logotipe dabar rašoma „GDLT Hub" ir šalia rodomas dabartinis puslapis.
+
+### Pašalinta
+- Atnaujinimų sąrašas nebėra freepost viduje (dabar jis yra hub'o lygyje).
+
+### Pataisyta
+- Pridėtas tarpas po paskutiniu įrašo komentaru.
+
 ## [v0.2.2] - 2026-07-05
 
 ### Pridėta

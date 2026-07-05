@@ -7,6 +7,20 @@ body {
   font-family: system-ui, sans-serif;
 }
 
+/* "GDLT Hub" wordmark painted with the Lithuanian flag stripes (yellow/green/red). */
+.flag-text {
+  background: linear-gradient(
+    to bottom,
+    #fdb913 0 33.333%,
+    #006a44 33.333% 66.666%,
+    #c1272d 66.666% 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
 /* Profile social icons: neutral by default, brand color (from --brand) on hover. */
 .social-icon {
   color: #a3a3a3;

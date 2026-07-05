@@ -32,6 +32,7 @@ const DRY_RUN = false // set to false to actually write
 
 // oldUid (random Firebase uid) -> discordId (numeric string)
 const MAPPING = {
+  '': ''
   // 'XyZ789oldFirebaseUid': '987654321098765432',
 }
 // ─────────────────────────────────────────────────────────────────────────────

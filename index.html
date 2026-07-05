@@ -4,10 +4,30 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/png" href="/icon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>freepost</title>
+    <title>GDLT Hub</title>
+    <style>
+      /* Shown before the React bundle loads, then replaced when the app mounts. */
+      html, body { margin: 0; background: #0a0a0a; }
+      @keyframes gdlt-spin { to { transform: rotate(360deg); } }
+      #initial-loader {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #initial-loader img {
+        width: 64px;
+        height: 64px;
+        animation: gdlt-spin 1s linear infinite;
+      }
+    </style>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div id="initial-loader">
+        <img src="%BASE_URL%loadingWheel.png" alt="loading" />
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

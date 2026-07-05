@@ -1,5 +1,28 @@
 # Changelog
 
+## [v0.3] - 2026-07-05
+
+### Added
+- GDLT Hub — a new home page that acts as a centralized place for the community. freepost is now one part of the hub, with more to come.
+- About page with an "About" and a "Credits" tab; credited people can be linked to their freepost profiles and show their profile pictures.
+- The changelog moved up to the hub, so it's reachable from anywhere.
+- A shared top bar on every page — language switch, notifications, and login/profile picture are now available everywhere, including the home page.
+- User search in freepost — find users by name; all users are shown by default and the list narrows as you type.
+- A back button below the header on every page.
+- The Lithuanian flag colors painted onto the "GDLT" wordmark.
+- A loading icon shown while the page is still loading.
+
+### Changed
+- Clean links without the "#" (e.g. `/gdlt-hub/freepost` instead of `/gdlt-hub/#/freepost`).
+- Discord login is centralized for the whole hub and returns you to the home page after signing in.
+- The header logo now reads "GDLT Hub" and shows the current page next to it.
+
+### Removed
+- The changelog is no longer inside freepost (it now lives at the hub level).
+
+### Fixed
+- Added spacing below the last comment on a post.
+
 ## [v0.2.2] - 2026-07-05
 
 ### Added

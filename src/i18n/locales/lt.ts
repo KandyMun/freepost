@@ -7,7 +7,28 @@ const lt = {
   nav_users: 'Vartotojai',
   nav_signin: 'Prisijungti',
   nav_signout: 'Atsijungti',
+  nav_back: 'Atgal',
+  nav_about: 'Apie šį puslapį',
+  nav_search: 'Vartotojų paieška',
   nav_logged_in_as: (u: string) => `Prisijungta kaip: ${u}`,
+
+  // Home
+  home_tagline: 'Centralizuota vieta GD Lietuvos bendruomenei',
+  home_freepost_desc: 'Kelk nuotraukas ir kvailiok su draugais.',
+
+  // About
+  about_title: 'Apie šį puslapį',
+  about_tab_about: 'Apie',
+  about_tab_credits: 'Padėkos',
+  about_credit_dev: 'Kūrėjas ir programavimas',
+  about_credit_icon: 'Svetainės ikona',
+  about_credit_ideas: 'Svetainės funkcijų idėjos',
+  about_body:
+    'GDLT Hub — centralizuota vieta Geometry Dash Lietuvos bendruomenei. Iš čia gali patekti į įvairius bendruomenei sukurtus įrankius ir erdves — pradedant nuo freepost, o daugiau bus netrukus.',
+
+  // User search
+  user_search_placeholder: 'Ieškoti vartotojų…',
+  user_search_none: (q: string) => `Nėra vartotojų pagal „${q}“`,
 
   // Site status
   site_frozen_banner: 'Svetainė šiuo metu užšaldyta. Įrašymas ir sąveikos išjungtos.',

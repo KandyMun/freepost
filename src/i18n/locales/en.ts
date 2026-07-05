@@ -7,7 +7,28 @@ const en = {
   nav_users: 'Users',
   nav_signin: 'Sign in',
   nav_signout: 'Sign out',
+  nav_back: 'Back',
+  nav_about: 'About this page',
+  nav_search: 'User search',
   nav_logged_in_as: (u: string) => `Logged in as: ${u}`,
+
+  // Home
+  home_tagline: "A centralized place for GD Lithuania's community",
+  home_freepost_desc: 'Post images and mess around with friends.',
+
+  // About
+  about_title: 'About this page',
+  about_tab_about: 'About',
+  about_tab_credits: 'Credits',
+  about_credit_dev: 'Creator & development',
+  about_credit_icon: 'Website icon',
+  about_credit_ideas: 'Website feature ideas',
+  about_body:
+    'GDLT Hub is a centralized place for the Geometry Dash Lithuania community. From here you can jump into the different tools and spaces built for the community — starting with freepost, with more to come.',
+
+  // User search
+  user_search_placeholder: 'Search users…',
+  user_search_none: (q: string) => `No users match "${q}"`,
 
   // Site status
   site_frozen_banner: 'The site is currently frozen. Posting and interactions are disabled.',
