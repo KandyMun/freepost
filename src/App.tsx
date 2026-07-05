@@ -7,6 +7,9 @@ import Layout from './components/Layout'
 import HomePage from './components/HomePage'
 import AboutPage from './components/AboutPage'
 import ChangelogPage from './components/ChangelogPage'
+import ProfilePage from './components/ProfilePage'
+import LtclPage from './components/LtclPage'
+import UserSearch from './components/UserSearch'
 import FreepostApp from './FreepostApp'
 
 // Module-level guard: exchange the one-time OAuth code exactly once, even though
@@ -60,6 +63,10 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/changelog" element={<ChangelogPage />} />
+        {/* Profiles belong to the whole hub, not just freepost, so they live at /u/. */}
+        <Route path="/u/:username" element={<ProfilePage />} />
+        <Route path="/user-search" element={<UserSearch />} />
+        <Route path="/ltcl/*" element={<LtclPage />} />
         <Route path="/freepost/*" element={<FreepostApp />} />
       </Route>
     </Routes>

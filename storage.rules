@@ -1,0 +1,31 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    match /posts/{uid}/{file=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    match /avatars/{uid}/{file=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Badge icons (≤ 250 KB) and backgrounds (≤ 1 MB), images only.
+    match /badges/icons/{uid}/{file=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == uid
+                   && request.resource.size < 250 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+
+    match /badges/backgrounds/{uid}/{file=**} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.uid == uid
+                   && request.resource.size < 1024 * 1024
+                   && request.resource.contentType.matches('image/.*');
+    }
+  }
+}

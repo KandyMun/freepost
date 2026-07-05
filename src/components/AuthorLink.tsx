@@ -31,7 +31,7 @@ export function AuthorLink({
   const name = useDisplayName(handle)
   return (
     <Link
-      to={`/freepost/u/${handle}`}
+      to={`/u/${handle}`}
       onClick={stopPropagation ? (e) => e.stopPropagation() : undefined}
       className={className}
     >

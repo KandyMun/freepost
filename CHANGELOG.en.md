@@ -1,5 +1,23 @@
 # Changelog
 
+## [v0.4] - 2026-07-06
+
+### Added
+- Lithuanian Challenge List (LTCL) — a new section of the hub for ranking the hardest community-made challenges. It has its own home page (welcome, level changelog, and list staff), and tabs for List, Leaderboard and List Rules.
+- Challenge Roulette and Packs are planned and will be added later.
+- The List — a searchable, ranked list of 145 imported levels. Selecting a level shows its verification video, point value, level ID, average enjoyment, song/NONG, creators/verifier/publisher, and every completion (record) with the player's enjoyment.
+- Points & legacy — placements #1–100 score points on a curve; anything past #100 is shown as Legacy and worth 0 points. Each level's average enjoyment is computed from its records.
+- Leaderboard — players ranked by total points. Each player's page shows their rank, points, hardest challenge, and their completed / created / verified challenges (main list in bold, legacy in italic), with every level linking back to the List.
+- LTCL stats on hub profiles — a card with leaderboard position, points, and hardest challenge, plus a link to the player's LTCL page. The LTCL page links back to the main profile.
+- Role-based permissions — assigned roles now grant abilities: List Admins manage levels, records and rules; List Moderators curate records; Administrators can do everything and are the only ones who can assign roles.
+- Custom badges — administrators can create purely cosmetic badges with an emoji or uploaded image/GIF icon (≤ 250 KB), an optional 86×40 background image (≤ 1 MB), a color, and an event date. Badges can be given to anyone, appear on their profile, and show their name and date on hover.
+- Admin tools to add, edit, delete and reorder LTCL levels and manage records directly on the site.
+
+### Changed
+- User profiles now belong to the whole hub (`/u/...`) instead of living under freepost.
+- User search is now a card on the home page.
+- Roles are shown as small icons next to the username; custom badges take the pill spot below them.
+
 ## [v0.3.1] - 2026-07-05
 
 ### Added

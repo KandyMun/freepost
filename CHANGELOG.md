@@ -1,5 +1,23 @@
 # Changelog
 
+## [v0.4] - 2026-07-06
+
+### Pridėta
+- Lietuvos iššūkių sąrašas (LTCL) — nauja hub'o dalis, skirta rikiuoti sunkiausius bendruomenės sukurtus iššūkius. Turi savo pagrindinį puslapį (pasisveikinimas, lygių pakeitimų žurnalas ir sąrašo personalas) bei skirtukus: Sąrašas, Lyderių lentelė ir Sąrašo taisyklės.
+- Iššūkių ruletė ir pakeliai bus pridėti vėliau.
+- Sąrašas — ieškomas, surikiuotas 145 importuotų lygių sąrašas. Pasirinkus lygį matomas patvirtinimo vaizdo įrašas, taškų vertė, lygio ID, vidutinis enjoyment, daina/NONG, kūrėjai/patvirtinęs/įkėlęs ir visi įveikimai (rekordai) su žaidėjo enjoyment.
+- Taškai ir legacy — vietos #1–100 gauna taškus pagal kreivę; viskas po #100 rodoma kaip Legacy ir verta 0 taškų. Kiekvieno lygio vidutinis enjoyment apskaičiuojamas iš jo rekordų.
+- Lyderių lentelė — žaidėjai rikiuojami pagal bendrą taškų skaičių. Žaidėjo puslapyje rodoma jo vieta, taškai, sunkiausias iššūkis ir jo įveikti / sukurti / patvirtinti iššūkiai (pagrindinis sąrašas paryškintas, legacy — kursyvu), kiekvienas lygis nukreipia atgal į Sąrašą.
+- LTCL statistika hub profiliuose — kortelė su vieta lyderių lentelėje, taškais ir sunkiausiu iššūkiu bei nuoroda į žaidėjo LTCL puslapį. LTCL puslapis turi nuorodą atgal į pagrindinį profilį.
+- Rolėmis pagrįstos teisės — priskirtos rolės dabar suteikia galimybes: sąrašo administratoriai tvarko lygius, rekordus ir taisykles; sąrašo moderatoriai tvarko rekordus; administratoriai gali viską ir tik jie gali priskirti roles.
+- Individualūs ženkleliai — administratoriai gali kurti grynai dekoratyvius ženklelius su emoji ar įkelta nuotrauka/GIF ikona (≤ 250 KB), nebūtinu 86×40 fono paveikslėliu (≤ 1 MB), spalva ir renginio data. Ženkleliai gali būti suteikti bet kam, rodomi jų profilyje, o užvedus pele parodomas pavadinimas ir data.
+- Administratorių įrankiai LTCL lygiams pridėti, redaguoti, trinti ir perrikiuoti bei rekordams tvarkyti tiesiai svetainėje.
+
+### Pakeista
+- Vartotojų profiliai dabar priklauso visam hub'ui (`/u/...`), o ne freepost daliai.
+- Vartotojų paieška dabar yra kortelė pagrindiniame puslapyje.
+- Rolės rodomos kaip mažos ikonos šalia vartotojo vardo; individualūs ženkleliai užima „piliulės" vietą po jomis.
+
 ## [v0.3.1] - 2026-07-05
 
 ### Pridėta

@@ -1,0 +1,86 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() { return request.auth != null; }
+
+    // The hardcoded super-admin always has full access.
+    function isSuper() {
+      return isSignedIn() && request.auth.uid == "iG5pZlJrNYSyU7IONYNnoo3XFYp2";
+    }
+
+    // Roles assigned to the requesting user (empty list if none / no doc).
+    function myRoles() {
+      return isSignedIn()
+        ? get(/databases/$(database)/documents/users/$(request.auth.uid)).data.get('roles', [])
+        : [];
+    }
+    function hasRole(r) { return myRoles().hasAny([r]); }
+
+    // Super-admin or the `administrator` role = full site admin.
+    function isAdmin() { return isSuper() || hasRole('administrator'); }
+
+    // Only these keys differ between the incoming and stored doc.
+    function changedOnly(keys) {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(keys);
+    }
+
+    match /posts/{postId} {
+      allow read: if true;
+      allow create: if request.auth != null
+                    && request.resource.data.authorId == request.auth.uid;
+      // any logged-in user can like/dislike; author or admin can edit/delete
+      allow update: if request.auth != null;
+      allow delete: if request.auth != null
+                    && (resource.data.authorId == request.auth.uid || isAdmin());
+
+      match /comments/{commentId} {
+        allow read: if true;
+        allow create: if request.auth != null;
+        allow update: if request.auth != null
+                      && request.auth.uid == resource.data.authorId;
+        allow delete: if request.auth != null
+                      && (request.auth.uid == resource.data.authorId || isAdmin());
+      }
+    }
+
+    match /config/{doc} {
+      allow read: if true;
+      // Rules text is editable by list staff; other config stays admin-only.
+      allow write: if isAdmin() || (doc == 'ltclRules' && hasRole('list-admin'));
+    }
+
+    match /users/{uid} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null
+                    && (request.auth.uid == uid || isAdmin());
+      // A user may edit their own profile but NOT their roles or badges (no
+      // self-promotion / self-awarding). Only admins can change those or ban.
+      allow update: if isAdmin()
+                    || (request.auth != null && request.auth.uid == uid
+                        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['roles', 'banned', 'badges']));
+    }
+
+    match /notifications/{id} {
+      allow read, update, delete: if request.auth != null
+                                  && resource.data.userId == request.auth.uid;
+      allow create: if request.auth != null;
+    }
+
+    // Cosmetic badge definitions: anyone can read, only admins define them.
+    match /badges/{badgeId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // LTCL level list. Anyone can read. list-admins have full control;
+    // list-moderators may only change the records array (curating completions).
+    match /levels/{levelId} {
+      allow read: if true;
+      allow create, delete: if isAdmin() || hasRole('list-admin');
+      allow update: if isAdmin() || hasRole('list-admin')
+                    || (hasRole('list-moderator') && changedOnly(['records']));
+    }
+  }
+}

@@ -4,7 +4,7 @@ import { useI18n } from '../i18n'
 import Avatar from './Avatar'
 
 // People to credit. Add entries here — name, a role label, and an optional
-// `handle` to link them to their freepost profile (/freepost/u/{handle}).
+// `handle` to link them to their hub profile (/u/{handle}).
 type Credit = { name: string; role: string; handle?: string }
 
 function useCredits(): Credit[] {
@@ -40,7 +40,7 @@ export default function AboutPage() {
           {credits.map((c) => (
             <div key={c.name} className="flex items-center justify-between gap-3 bg-neutral-900 rounded-xl px-4 py-3">
               {c.handle ? (
-                <Link to={`/freepost/u/${c.handle}`} className="flex items-center gap-3 min-w-0 group">
+                <Link to={`/u/${c.handle}`} className="flex items-center gap-3 min-w-0 group">
                   <Avatar username={c.handle} size={40} />
                   <p className="text-white font-medium truncate group-hover:text-violet-300 transition-colors">
                     {c.name}

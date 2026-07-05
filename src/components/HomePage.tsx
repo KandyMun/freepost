@@ -15,6 +15,18 @@ export default function HomePage() {
       to: '/freepost',
       emoji: '🖼️',
     },
+    {
+      name: 'LTCL',
+      description: t.home_ltcl_desc,
+      to: '/ltcl',
+      emoji: '🏆',
+    },
+    {
+      name: t.user_search_title,
+      description: t.home_search_desc,
+      to: '/user-search',
+      emoji: '🔍',
+    },
   ]
 
   return (

@@ -12,7 +12,8 @@ interface UserRecord {
   photoURL?: string
 }
 
-export default function UserSearchPage() {
+// Hub-wide user search page, opened from the card on the home page (/search).
+export default function UserSearch() {
   const { t } = useI18n()
   const [users, setUsers] = useState<UserRecord[]>([])
   const [search, setSearch] = useState('')
@@ -51,7 +52,7 @@ export default function UserSearchPage() {
       {results.map((u) => (
         <Link
           key={u.id}
-          to={`/freepost/u/${u.username}`}
+          to={`/u/${u.username}`}
           className="bg-neutral-900 rounded-2xl flex gap-3 items-center p-3 hover:bg-neutral-800 transition-colors"
         >
           <Avatar username={u.username} photoURL={u.photoURL ?? ''} size={44} />

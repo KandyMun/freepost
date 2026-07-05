@@ -12,6 +12,7 @@ import NotificationsPanel from './NotificationsPanel'
 import PostModal from './PostModal'
 import Avatar from './Avatar'
 import FreepostNav from './FreepostNav'
+import LtclNav from './LtclNav'
 import HomeNav from './HomeNav'
 import VERSION from '../version'
 
@@ -39,8 +40,9 @@ export default function Layout() {
   // Section-specific bits: the middle nav and the page label shown next to the logo.
   const onHome = location.pathname === '/'
   const inFreepost = location.pathname.startsWith('/freepost')
-  const pageLabel = inFreepost ? 'freepost' : null
-  const middle = inFreepost ? <FreepostNav /> : <HomeNav />
+  const inLtcl = location.pathname.startsWith('/ltcl')
+  const pageLabel = inFreepost ? 'freepost' : inLtcl ? 'LTCL' : null
+  const middle = inFreepost ? <FreepostNav /> : inLtcl ? <LtclNav /> : <HomeNav />
 
   return (
     <div className="min-h-screen bg-neutral-950">
@@ -94,7 +96,7 @@ export default function Layout() {
                       )}
                     </div>
                     <button
-                      onClick={() => { setMenuOpen(false); navigate(`/freepost/u/${currentUsername}`) }}
+                      onClick={() => { setMenuOpen(false); navigate(`/u/${currentUsername}`) }}
                       className="w-full text-left px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 transition-colors"
                     >
                       {t.nav_profile}

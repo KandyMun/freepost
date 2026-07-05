@@ -13,7 +13,6 @@ export default function FreepostNav() {
   return (
     <>
       <NavLink to="/freepost" end className={navClass}>{t.nav_feed}</NavLink>
-      <NavLink to="/freepost/search" className={navClass}>{t.nav_search}</NavLink>
       {isAdmin && <NavLink to="/freepost/users" className={navClass}>{t.nav_users}</NavLink>}
     </>
   )

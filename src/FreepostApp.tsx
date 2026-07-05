@@ -8,8 +8,6 @@ import Feed from './components/Feed'
 import MyPosts from './components/MyPosts'
 import UsersPage from './components/UsersPage'
 import NewPostModal from './components/NewPostModal'
-import UserSearchPage from './components/UserSearchPage'
-import ProfilePage from './components/ProfilePage'
 
 // The freepost body, mounted at /freepost/* under the shared Layout. The top bar
 // (logo, language, notifications, profile) lives in Layout; this owns only the
@@ -35,8 +33,6 @@ export default function FreepostApp() {
       <main className="max-w-5xl mx-auto">
         <Routes>
           <Route path="" element={<Feed key={feedKey} onPostModalChange={setPostModalOpen} frozen={frozen && !isAdmin} />} />
-          <Route path="search" element={<UserSearchPage />} />
-          <Route path="u/:username" element={<ProfilePage />} />
           {user && <Route path="myposts" element={<MyPosts />} />}
           {isAdmin && <Route path="users" element={<UsersPage />} />}
         </Routes>

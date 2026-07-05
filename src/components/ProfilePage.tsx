@@ -11,7 +11,10 @@ import type { CustomLink } from '../socials'
 import ProfilePosts from './ProfilePosts'
 import { SocialLinksRow, SocialLinksEditor } from './SocialLinks'
 import AredlStats from './AredlStats'
+import LtclStats from './LtclStats'
 import GdStats from './GdStats'
+import BadgePill from './BadgePill'
+import { useBadges } from '../badges'
 import Spinner from './Spinner'
 
 interface Profile {
@@ -22,6 +25,7 @@ interface Profile {
   photoURL?: string
   createdAt?: number
   roles?: string[]
+  badges?: string[]
   socials?: Record<string, string>
   customLinks?: CustomLink[]
   gdUsername?: string
@@ -54,6 +58,7 @@ export default function ProfilePage() {
   const { username } = useParams<{ username: string }>()
   const { user } = useAuth()
   const { t, locale } = useI18n()
+  const { badges: allBadges } = useBadges()
 
   const [profile, setProfile] = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
@@ -242,6 +247,16 @@ export default function ProfilePage() {
         ) : (
           <div className="flex items-center gap-2 mt-4">
             <h1 className="text-white text-2xl font-semibold">{profile.displayName || profile.username}</h1>
+            {/* Roles appear as small icons right by the name. */}
+            {profile.roles?.map((id) => {
+              const r = getRole(id)
+              if (!r) return null
+              return (
+                <span key={id} title={r.label[locale]} aria-label={r.label[locale]} className="text-lg leading-none">
+                  {r.icon}
+                </span>
+              )
+            })}
             {showOwnerControls && (
               <button
                 onClick={startEditName}
@@ -257,16 +272,11 @@ export default function ProfilePage() {
         {(profile.displayName || profile.username) !== profile.username && (
           <p className="text-neutral-500 text-sm">@{profile.username}</p>
         )}
-        {profile.roles && profile.roles.length > 0 && (
+        {profile.badges && profile.badges.length > 0 && (
           <div className="flex flex-wrap justify-center gap-1.5 mt-2">
-            {profile.roles.map((id) => {
-              const r = getRole(id)
-              if (!r) return null
-              return (
-                <span key={id} className={`text-xs px-2.5 py-0.5 rounded-full border ${r.badge}`}>
-                  {r.label[locale]}
-                </span>
-              )
+            {profile.badges.map((id) => {
+              const b = allBadges.find((x) => x.id === id)
+              return b ? <BadgePill key={id} badge={b} /> : null
             })}
           </div>
         )}
@@ -311,6 +321,8 @@ export default function ProfilePage() {
           <p className="text-neutral-600 text-sm italic">{t.profile_no_about}</p>
         )}
       </div>
+
+      <LtclStats username={profile.username} />
 
       <AredlStats username={profile.username} discordId={profile.uid} />
 
