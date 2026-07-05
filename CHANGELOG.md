@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.3.1] - 2026-07-05
+
+### Pridėta
+- Geometry Dash statistika profilyje — kortelė su žvaigždėmis, mėnuliais, demonais, slaptomis ir vartotojo monetomis, deimantais, kūrėjo taškais bei vieta pasaulio lyderių lentelėje, su nuoroda į žaidėjo GDBrowser puslapį.
+- Automatinis paskyros suradimas — jei Discord vardas tiksliai sutampa su GD paskyra, jos statistika profilyje rodoma be jokių nustatymų. Prie automatiškai parinktų kortelių rodoma pastaba, nebent GD profilio Discord nuoroda patvirtina, kad tai jūs.
+- Rankinis GD paskyros susiejimas — savo profilyje galima nurodyti žaidimo vartotojo vardą. Apsaugai nuo apsimetinėjimo, išsaugoti pavyks tik jei GD profilio socialinėse nuorodose nurodytas jūsų Discord vardas; palikus lauką tuščią ir išsaugojus, paskyra atsiejama.
+
+### Pašalinta
+- Bluesky iš profilio socialinių nuorodų.
+
+### Pataisyta
+- Paspaudus vartotojo vardą įrašuose ar įrašo lange, būdavo nukreipiama į neegzistuojantį puslapį — dabar atidaromas vartotojo profilis, kaip vartotojų paieškoje.
+
 ## [v0.3] - 2026-07-05
 
 ### Pridėta

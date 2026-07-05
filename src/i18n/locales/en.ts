@@ -164,6 +164,27 @@ const en = {
   aredl_hardest: 'Hardest demon',
   aredl_no_records: 'No completions yet.',
 
+  // Profile — Geometry Dash stats
+  gd_title: 'Geometry Dash',
+  gd_view: 'View on GDBrowser',
+  gd_stars: 'Stars',
+  gd_moons: 'Moons',
+  gd_demons: 'Demons',
+  gd_secret_coins: 'Secret coins',
+  gd_user_coins: 'User coins',
+  gd_diamonds: 'Diamonds',
+  gd_creator_points: 'Creator points',
+  gd_global_rank: 'Global rank',
+  gd_username_label: 'GD username',
+  gd_username_placeholder: 'Your in-game username',
+  gd_username_hint: 'Link your Geometry Dash account by its in-game username. Your GD profile must list your Discord handle in its social links so we can confirm it\'s you. Leave empty and save to unlink.',
+  gd_verify_failed: (handle: string) => `Couldn't verify it's you: that GD profile doesn't list your Discord handle (${handle}). Add it in GD under profile → social links, then try again.`,
+  gd_username_invalid: 'Usernames are 1–20 letters, numbers or spaces.',
+  gd_not_found: (name: string) => `No GD user named "${name}" was found.`,
+  gd_error: 'Could not load GD stats. Try again later.',
+  gd_error_detail: (msg: string) => `Could not load GD stats: ${msg}`,
+  gd_auto_note: 'Auto-matched by username — the owner can set it manually if this is the wrong account.',
+
   // Profile — social links
   profile_links_title: 'Social links',
   profile_links_custom_title: 'Custom links',

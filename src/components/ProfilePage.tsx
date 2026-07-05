@@ -11,6 +11,7 @@ import type { CustomLink } from '../socials'
 import ProfilePosts from './ProfilePosts'
 import { SocialLinksRow, SocialLinksEditor } from './SocialLinks'
 import AredlStats from './AredlStats'
+import GdStats from './GdStats'
 import Spinner from './Spinner'
 
 interface Profile {
@@ -23,6 +24,7 @@ interface Profile {
   roles?: string[]
   socials?: Record<string, string>
   customLinks?: CustomLink[]
+  gdUsername?: string
 }
 
 const MAX_ABOUT = 500
@@ -311,6 +313,16 @@ export default function ProfilePage() {
       </div>
 
       <AredlStats username={profile.username} discordId={profile.uid} />
+
+      <GdStats
+        uid={profile.uid}
+        discordUsername={profile.username}
+        gdUsername={profile.gdUsername}
+        isOwner={showOwnerControls}
+        onSaved={(gdUsername) =>
+          setProfile((p) => (p ? { ...p, gdUsername: gdUsername || undefined } : p))
+        }
+      />
 
       {showOwnerControls && (
         <div className="bg-neutral-900 rounded-2xl p-6 mt-4">

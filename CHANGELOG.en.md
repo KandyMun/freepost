@@ -1,5 +1,18 @@
 # Changelog
 
+## [v0.3.1] - 2026-07-05
+
+### Added
+- Geometry Dash stats on profiles — a card showing stars, moons, demons, secret coins, user coins, diamonds, creator points, and global leaderboard rank, with a link to the player's GDBrowser page.
+- Automatic account matching — if your Discord username exactly matches a GD account, its stats appear on your profile without any setup. Auto-matched cards carry a small note unless the GD profile's Discord social link confirms it's you.
+- Manual GD account linking — set your in-game username on your own profile. To prevent impersonation, saving requires your GD profile to list your Discord handle in its social links; leave the field empty and save to unlink.
+
+### Removed
+- Bluesky from profile social links.
+
+### Fixed
+- Clicking a username on posts and in the post view led to a non-existent page — it now opens the user's profile, like in user search.
+
 ## [v0.3] - 2026-07-05
 
 ### Added

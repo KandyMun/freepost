@@ -9,7 +9,8 @@
     "postbuild": "cp dist/index.html dist/404.html",
     "lint": "eslint .",
     "preview": "vite preview",
-    "admin": "node scripts/admin.js"
+    "admin": "node scripts/admin.js",
+    "deploy:functions": "npm --prefix functions run build && firebase deploy --only functions"
   },
   "dependencies": {
     "firebase": "^12.14.0",

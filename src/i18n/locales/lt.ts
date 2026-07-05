@@ -168,6 +168,27 @@ const lt = {
   aredl_hardest: 'Sunkiausias demonas',
   aredl_no_records: 'Kol kas nėra įveiktų.',
 
+  // Profile — Geometry Dash statistika
+  gd_title: 'Geometry Dash',
+  gd_view: 'Žiūrėti GDBrowser',
+  gd_stars: 'Žvaigždės',
+  gd_moons: 'Mėnuliai',
+  gd_demons: 'Demonai',
+  gd_secret_coins: 'Slaptos monetos',
+  gd_user_coins: 'Vartotojo monetos',
+  gd_diamonds: 'Deimantai',
+  gd_creator_points: 'Kūrėjo taškai',
+  gd_global_rank: 'Vieta pasaulyje',
+  gd_username_label: 'GD vartotojo vardas',
+  gd_username_placeholder: 'Jūsų žaidimo vartotojo vardas',
+  gd_username_hint: 'Susiekite savo Geometry Dash paskyrą pagal žaidimo vartotojo vardą. Jūsų GD profilio socialinėse nuorodose turi būti nurodytas jūsų Discord vardas, kad patvirtintume tapatybę. Palikite tuščią ir išsaugokite, kad atsietumėte.',
+  gd_verify_failed: (handle: string) => `Nepavyko patvirtinti tapatybės: šiame GD profilyje nenurodytas jūsų Discord vardas (${handle}). Pridėkite jį GD profilio socialinėse nuorodose ir bandykite dar kartą.`,
+  gd_username_invalid: 'Vardą sudaro 1–20 raidžių, skaičių ar tarpų.',
+  gd_not_found: (name: string) => `GD vartotojas „${name}“ nerastas.`,
+  gd_error: 'Nepavyko užkrauti GD statistikos. Bandykite vėliau.',
+  gd_error_detail: (msg: string) => `Nepavyko užkrauti GD statistikos: ${msg}`,
+  gd_auto_note: 'Parinkta automatiškai pagal vardą — savininkas gali nustatyti ranka, jei tai ne ta paskyra.',
+
   // Profile — socialiniai tinklai
   profile_links_title: 'Socialiniai tinklai',
   profile_links_custom_title: 'Pasirinktinės nuorodos',
