@@ -43,8 +43,9 @@ export default function Layout() {
   const onHome = location.pathname === '/'
   const inFreepost = location.pathname.startsWith('/freepost')
   const inLtcl = location.pathname.startsWith('/ltcl')
+  const inBounty = location.pathname.startsWith('/bounty-board')
   const inAdmin = location.pathname.startsWith('/admin')
-  const pageLabel = inFreepost ? 'freepost' : inLtcl ? 'LTCL' : inAdmin ? 'admin' : null
+  const pageLabel = inFreepost ? 'freepost' : inLtcl ? 'LTCL' : inBounty ? t.bounty_board_title : inAdmin ? 'admin' : null
   const middle = inFreepost ? <FreepostNav /> : inLtcl ? <LtclNav /> : inAdmin ? null : <HomeNav />
 
   return (

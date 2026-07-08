@@ -14,6 +14,7 @@ export type Capability =
   | 'edit_rules' // edit the LTCL rules text
   | 'assign_roles' // grant / remove roles on users
   | 'manage_site' // site-wide admin (freeze, posts, users, bans)
+  | 'manage_bounties' // confirm/reopen bounties on the Bounty Board
 
 // Roles that grant blanket access to everything.
 export const SUPER_ROLES = ['administrator']
@@ -22,6 +23,7 @@ const ROLE_CAPS: Record<string, Capability[]> = {
   // administrator handled as a super-role (all capabilities) below.
   'list-admin': ['manage_levels', 'manage_records', 'edit_rules'],
   'list-moderator': ['manage_records'],
+  'bounty-board-manager': ['manage_bounties'],
 }
 
 const ALL_CAPS: Capability[] = [
@@ -30,6 +32,7 @@ const ALL_CAPS: Capability[] = [
   'edit_rules',
   'assign_roles',
   'manage_site',
+  'manage_bounties',
 ]
 
 // Resolve a set of role ids to the capabilities they grant.

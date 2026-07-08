@@ -19,6 +19,12 @@ export async function uploadLevelThumbnail(file: File, uid: string): Promise<str
   return getDownloadURL(r)
 }
 
+// Set (or replace) just a level's thumbnail, leaving every other field
+// untouched — used by the admin list's drag-and-drop-to-replace shortcut.
+export async function updateLevelThumbnail(levelId: number, thumbnail: string): Promise<void> {
+  await setDoc(doc(db, 'levels', String(levelId)), { thumbnail }, { merge: true })
+}
+
 // Point value for a placement (1-based). Legacy positions score 0.
 // Curve: 250 * exp(ln(0.04) * (x-1)/99) → #1 = 250, #100 = 10.
 export function pointsForPlacement(x: number): number {

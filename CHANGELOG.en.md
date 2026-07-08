@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.5.3] - 2026-07-08
+
+### Added
+- (Incomplete implementation) New "Bounty Board" tab on the homepage. Anyone can post a money bounty (min. €2) for someone to complete a specific level. Posters can edit or cancel their own open bounty. The bounty board manager (an existing role) can mark a bounty completed or reopen it — the reward is paid out externally by mutual agreement between the two parties, and the manager only confirms it actually happened.
+- The LTCL admin panel's level list now shows a level's thumbnail next to its name when it has one, and list admins can drag an image straight onto a level row to set or replace its thumbnail instantly, without opening the editor. Same 2 MB size limit applies.
+
 ## [v0.5.2.1] - 2026-07-08
 
 ### Added

@@ -1,5 +1,12 @@
 # Changelog
 
+## [v0.5.3] - 2026-07-08
+
+### Pridėta
+- (Nepilna implementacija) Nauja „Premijų lenta" — naujas skirtukas pagrindiniame puslapyje. Bet kas gali paskelbti piniginę premiją (min. 2 €) už konkretaus lygio įveikimą. Skelbėjas gali redaguoti ar atšaukti savo aktyvią premiją. Premijų lentos vadovas (jau esama rolė) gali pažymėti premiją įvykdyta arba grąžinti į aktyvias — atlygis sumokamas išoriškai, patys susitarę, o vadovas tik patvirtina, kad tai iš tikrųjų įvyko.
+- LTCL administravimo skydelio lygių sąraše dabar rodoma lygio miniatiūra šalia pavadinimo, jei ji nustatyta, o sąrašo administratoriai gali tiesiog užvilkti paveikslėlį ant lygio eilutės, kad iškart nustatytų ar pakeistų jo miniatiūrą — nereikia atidaryti redaktoriaus. Galioja tas pats 2 MB dydžio apribojimas.
+
+
 ## [v0.5.2.1] - 2026-07-08
 
 ### Pridėta

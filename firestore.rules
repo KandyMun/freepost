@@ -52,7 +52,9 @@ service cloud.firestore {
     }
 
     match /users/{uid} {
-      allow read: if request.auth != null;
+      // Public: usernames, avatars, roles, etc. are shown to logged-out
+      // visitors too (feed, LTCL, profiles, bounty board).
+      allow read: if true;
       allow create: if request.auth != null
                     && (request.auth.uid == uid || isAdmin());
       // A user may edit their own profile but NOT their roles or badges (no
@@ -81,6 +83,36 @@ service cloud.firestore {
       allow create, delete: if isAdmin() || hasRole('list-admin');
       allow update: if isAdmin() || hasRole('list-admin')
                     || (hasRole('list-moderator') && changedOnly(['records']));
+    }
+
+    // Bounty Board. Anyone can read/post a bounty (money changes hands
+    // externally between poster and completer). The poster may edit/cancel
+    // their own bounty while it's still open; only the bounty-board-manager
+    // role (or admin) may mark one completed/reopen it, since they're the
+    // one confirming the reward was actually paid out.
+    function isBountyManager() { return isAdmin() || hasRole('bounty-board-manager'); }
+
+    match /bounties/{bountyId} {
+      allow read: if true;
+      allow create: if request.auth != null
+                    && request.resource.data.posterId == request.auth.uid
+                    && request.resource.data.status == 'open'
+                    && request.resource.data.amount is number
+                    && request.resource.data.amount >= 2;
+      allow update: if request.auth != null
+                    && (
+                      (resource.data.posterId == request.auth.uid
+                        && resource.data.status == 'open'
+                        && changedOnly(['levelName', 'levelId', 'amount', 'description'])
+                        && request.resource.data.amount is number
+                        && request.resource.data.amount >= 2)
+                      || isBountyManager()
+                    );
+      // Poster may cancel their own bounty only while it's still open; the
+      // manager/admin can remove one (e.g. spam) regardless of status.
+      allow delete: if request.auth != null
+                    && ((resource.data.posterId == request.auth.uid && resource.data.status == 'open')
+                        || isBountyManager());
     }
   }
 }
