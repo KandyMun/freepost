@@ -6,15 +6,16 @@ import { useDisplayName } from './AuthorLink'
 import { levelThumbnailUrl } from '../aredl'
 import Spinner from './Spinner'
 
-// Blurred, darkened backdrop of the selected level's thumbnail — same source as
-// the AREDL hardest-demon banner. Fades in on load; shows nothing on error.
-function LevelBackdrop({ levelId }: { levelId: number }) {
+// Blurred, darkened backdrop of the selected level's thumbnail — the level's
+// custom upload if it has one, otherwise the AREDL-style auto thumbnail by id.
+// Fades in on load; shows nothing on error.
+function LevelBackdrop({ src }: { src: string }) {
   const [ok, setOk] = useState(false)
-  useEffect(() => { setOk(false) }, [levelId])
+  useEffect(() => { setOk(false) }, [src])
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none" aria-hidden="true">
       <img
-        src={levelThumbnailUrl(levelId)}
+        src={src}
         alt=""
         onLoad={() => setOk(true)}
         className={`w-full h-full object-cover scale-110 blur-2xl transition-opacity duration-500 ${ok ? 'opacity-25' : 'opacity-0'}`}
@@ -125,11 +126,25 @@ function LevelDetails({ level, rank }: { level: LtclLevel; rank: number }) {
           {avg === null ? '–' : `${avg.toFixed(2)}/10`}
         </StatBlock>
         <StatBlock label={t.ltcl_list_song}>
-          {level.songId ? (
-            <span className="inline-flex items-center gap-1">
+          {level.isNong ? (
+            level.songLink ? (
+              <a href={level.songLink} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-violet-300 hover:text-violet-200 hover:underline">
+                NONG <span className="text-xs">↗</span>
+              </a>
+            ) : (
+              <span className="inline-flex items-center gap-1">
+                {level.songId ?? '–'}<span className="text-amber-400 text-xs">NONG</span>
+              </span>
+            )
+          ) : level.songId ? (
+            <a
+              href={`https://www.newgrounds.com/audio/listen/${level.songId}`}
+              target="_blank"
+              rel="noreferrer"
+              className="text-violet-300 hover:text-violet-200 hover:underline"
+            >
               {level.songId}
-              {level.isNong && <span className="text-amber-400 text-xs align-middle">NONG</span>}
-            </span>
+            </a>
           ) : (
             '–'
           )}
@@ -206,7 +221,7 @@ export default function LtclList() {
 
   return (
     <div className="relative">
-      {current && <LevelBackdrop levelId={current.levelId} />}
+      {current && <LevelBackdrop src={current.thumbnail || levelThumbnailUrl(current.levelId)} />}
       <div className="relative p-4 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)_minmax(0,1fr)] gap-4">
       {/* Left: ranked list */}
       <div className="rounded-2xl border border-neutral-800/60 bg-neutral-900/30 backdrop-blur-sm p-3 flex flex-col gap-2">

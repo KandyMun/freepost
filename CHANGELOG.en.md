@@ -1,12 +1,17 @@
 # Changelog
 
+## [v0.5.1] - 2026-07-08
+
+### Added
+- Custom level thumbnails — list staff can upload a thumbnail image when adding or editing a level (stored securely, up to 2 MB). The selected level's thumbnail now shows as the blurred backdrop on the List page, falling back to the automatic thumbnail (by level ID) when none is uploaded.
+- Song links — a level's song now links out: a NONG opens its external download link, while a regular song links to its Newgrounds page. List staff pick which via the NONG checkbox in the level editor, which swaps the field between a song ID and a download link.
+
 ## [v0.5.0.1] - 2026-07-08
 
-### Pakeista
-- LTCL level list now spans the entire page width.
-- Added support for level thumbnail display in the background. Currently they are not shown because the images are not uploaded for use.
-- Reduced the existing segment background opacity to make the page background more visible
-
+### Changed
+- The LTCL level list now spans the entire page width.
+- Added support for showing a level's thumbnail in the page background (not yet visible, as no images have been uploaded for use).
+- Reduced the opacity of the section backgrounds so the page background is more visible.
 
 ## [v0.5] - 2026-07-07
 

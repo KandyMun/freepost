@@ -1,9 +1,23 @@
 import { useEffect, useState } from 'react'
 import { collection, onSnapshot, doc, setDoc, deleteDoc, writeBatch } from 'firebase/firestore'
-import { db } from './firebase'
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
+import { db, storage } from './firebase'
 
 // Placements past this are "Legacy" and worth 0 points.
 export const LEGACY_AFTER = 100
+
+// Custom level thumbnail upload cap.
+export const LEVEL_THUMB_MAX = 2 * 1024 * 1024 // 2 MB
+
+// Validate + upload a custom level thumbnail to Storage; returns the URL.
+export async function uploadLevelThumbnail(file: File, uid: string): Promise<string> {
+  if (file.size > LEVEL_THUMB_MAX) throw new Error('too-large')
+  if (!file.type.startsWith('image/')) throw new Error('type')
+  const path = `level-thumbnails/${uid}/${Date.now()}_${file.name}`
+  const r = ref(storage, path)
+  await uploadBytes(r, file)
+  return getDownloadURL(r)
+}
 
 // Point value for a placement (1-based). Legacy positions score 0.
 // Curve: 250 * exp(ln(0.04) * (x-1)/99) → #1 = 250, #100 = 10.
@@ -38,13 +52,15 @@ export interface LtclLevel {
   publisher: string
   creators: string[]
   verifier: string
-  songId: number | null
+  songId: number | null // Newgrounds song ID (used when not a NONG)
+  songLink?: string | null // external download URL (used when it is a NONG)
   isNong: boolean
   password?: string | null
   verificationUrl?: string | null
   youtubeId?: string | null
   placement: number | null
   points: number | null
+  thumbnail?: string | null // custom thumbnail image URL (overrides the auto one)
   records: LtclRecord[]
 }
 

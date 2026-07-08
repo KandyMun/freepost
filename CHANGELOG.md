@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.5.1] - 2026-07-08
+
+### Pridėta
+- Individualios lygių miniatiūros — sąrašo personalas gali įkelti miniatiūros paveikslėlį pridedant ar redaguojant lygį (saugoma saugiai, iki 2 MB). Pasirinkto lygio miniatiūra dabar rodoma kaip išblukęs fonas Sąrašo puslapyje; jei nėra įkeltos, naudojama automatinė miniatiūra (pagal lygio ID).
+- Dainų nuorodos — lygio daina dabar veda į išorę: NONG atveria išorinę atsisiuntimo nuorodą, o įprasta daina nukreipia į jos Newgrounds puslapį. Sąrašo personalas pasirenka pagal NONG žymimąjį langelį lygio redaktoriuje, kuris perjungia lauką tarp dainos ID ir atsisiuntimo nuorodos.
+
 ## [v0.5.0.1] - 2026-07-08
 
 ### Pakeista
