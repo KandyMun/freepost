@@ -1,5 +1,15 @@
 # Changelog
 
+## [v0.5.5] - 2026-07-10
+
+### Added
+- New "Packs" tab in LTCL — browse named groups of levels as a single scrollable list. A level can belong to any number of packs or none, and each pack's levels are sorted hardest-first automatically from their list placement. Opening a pack shows its background image, its levels (each with a full-bleed thumbnail), and, when you're signed in, how many of them you've beaten. Packs don't award any points yet — how pack completion should score is still being decided, so for now they're purely a way to group and track levels.
+- List admins can manage packs in a new "Packs" section of the LTCL admin panel — create, edit and delete packs, pick their levels (at least 3) with a search box, and upload a background image. The pack list has its own search, and each pack shows a thumbnail next to its name.
+- LTCL profiles now have a "Completed packs" section above completed challenges, showing every pack you've fully beaten as a background-image banner with the pack name on top.
+
+### Changed
+- The header now highlights the active tab as a filled pill across every page (hub, freepost and LTCL), instead of just brightening its text.
+
 ## [v0.5.4] - 2026-07-08
 
 ### Added

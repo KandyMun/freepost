@@ -4,6 +4,7 @@ import LtclHome from './LtclHome'
 import LtclRules from './LtclRules'
 import LtclList from './LtclList'
 import LtclLeaderboard from './LtclLeaderboard'
+import LtclPacks from './LtclPacks'
 import LtclAdminPage from './LtclAdminPage'
 
 // A tab section of LTCL. Swap these placeholders for real content as it's built.
@@ -34,7 +35,7 @@ export default function LtclPage() {
         <Route path="leaderboard/:username" element={<LtclLeaderboard />} />
         <Route path="admin" element={<LtclAdminPage />} />
         <Route path="roulette" element={<Placeholder emoji="🎰" title={t.ltcl_tab_roulette} />} />
-        <Route path="packs" element={<Placeholder emoji="📦" title={t.ltcl_tab_packs} />} />
+        <Route path="packs" element={<LtclPacks />} />
       </Routes>
     </main>
   )

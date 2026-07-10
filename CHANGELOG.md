@@ -1,5 +1,15 @@
 # Changelog
 
+## [v0.5.5] - 2026-07-10
+
+### Pridėta
+- Naujas „Pakeliai" skirtukas LTCL — naršyk lygių grupes kaip vieną slenkamą sąrašą. Lygis gali priklausyti bet kokiam kiekiui pakelių arba nė vienam, o kiekvieno pakelio lygiai automatiškai rikiuojami nuo sunkiausio pagal jų vietą sąraše. Atidarius pakelį matomas jo fono paveikslėlis, jo lygiai (kiekvienas su viso pločio miniatiūra) ir, kai esi prisijungęs, kiek jų esi įveikęs. Pakeliai kol kas neduoda jokių taškų — kaip pakelio įveikimas turėtų būti vertinamas, dar sprendžiama, tad kol kas jie tik būdas grupuoti ir sekti lygius.
+- Sąrašo administratoriai gali tvarkyti pakelius naujame „Pakeliai" skirtuke LTCL administravimo skydelyje — kurti, redaguoti ir trinti pakelius, pasirinkti jų lygius (bent 3) su paieška bei įkelti fono paveikslėlį. Pakelių sąrašas turi savo paiešką, o kiekvienas pakelis rodo miniatiūrą šalia pavadinimo.
+- LTCL profiliuose dabar yra „Įveikti pakeliai" skiltis virš įveiktų challenge'ų, rodanti kiekvieną pilnai įveiktą pakelį kaip fono paveikslėlio juostą su pakelio pavadinimu viršuje.
+
+### Pakeista
+- Antraštėje aktyvus skirtukas dabar paryškinamas kaip užpildyta piliulė visuose puslapiuose (pagrindinis, freepost ir LTCL), o ne tik pašviesinamas jo tekstas.
+
 ## [v0.5.4] - 2026-07-08
 
 ### Pridėta

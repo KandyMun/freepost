@@ -85,6 +85,21 @@ service cloud.firestore {
                     || (hasRole('list-moderator') && changedOnly(['records']));
     }
 
+    // LTCL packs: named groups of levels. Anyone can read; list-admins (or
+    // admin) create/edit/delete them. A pack must hold at least 3 levels — the
+    // editor enforces this too, but the rule is the source of truth.
+    function packValid() {
+      return request.resource.data.levelIds is list
+             && request.resource.data.levelIds.size() >= 3
+             && request.resource.data.name is string
+             && request.resource.data.name.size() > 0;
+    }
+    match /packs/{packId} {
+      allow read: if true;
+      allow create, update: if (isAdmin() || hasRole('list-admin')) && packValid();
+      allow delete: if isAdmin() || hasRole('list-admin');
+    }
+
     // Bounty Board. Anyone can read/post a bounty (money changes hands
     // externally between poster and completer). The poster may edit/cancel
     // their own bounty while it's still open; only the bounty-board-manager

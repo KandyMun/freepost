@@ -5,6 +5,7 @@ import { db } from '../firebase'
 import { useI18n } from '../i18n'
 import { useAuth } from '../AuthContext'
 import { useLtclLevels, buildLeaderboard, LEGACY_AFTER, type LbEntry, type LtclLevel } from '../ltclLevels'
+import { useLtclPacks, packLevels, packCompletion, type LtclPack } from '../ltclPacks'
 import { levelThumbnailUrl } from '../aredl'
 import { useDisplayName } from './AuthorLink'
 import { useProfile, invalidateProfile } from '../userProfiles'
@@ -149,9 +150,62 @@ function BackgroundPicker({
   )
 }
 
-function UserDetail({ entry, rank }: { entry: LbEntry; rank: number }) {
+// A pack this player has fully completed, rendered as a background-image banner
+// with the pack name on top — the same look as gdlt-hub badges that have a
+// background image. Falls back to the pack's first level thumbnail when the
+// pack has no background image of its own.
+function PackBanner({ pack, levels }: { pack: LtclPack; levels: LtclLevel[] }) {
+  const first = packLevels(pack, levels)[0]
+  const img = pack.image || (first ? first.thumbnail || levelThumbnailUrl(first.levelId) : '')
+  return (
+    <Link
+      to="/ltcl/packs"
+      className="group relative flex items-center justify-center w-[86px] h-[40px] rounded-md overflow-hidden"
+    >
+      {img && (
+        <img
+          src={img}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+        />
+      )}
+      <span className="relative text-center px-1.5 text-xs font-semibold text-white leading-tight [text-shadow:_0_1px_3px_rgb(0_0_0_/_0.95),_0_0_2px_rgb(0_0_0_/_0.9)]">
+        {pack.name}
+      </span>
+    </Link>
+  )
+}
+
+// The "Completed packs" section: every pack whose every level this player has
+// beaten. Hidden entirely when they've completed none.
+function CompletedPacks({ packs, levels, handle }: { packs: LtclPack[]; levels: LtclLevel[]; handle: string }) {
+  const { t } = useI18n()
+  const completed = useMemo(
+    () =>
+      packs.filter((p) => {
+        const total = packLevels(p, levels).length
+        return total > 0 && packCompletion(p, levels, handle) === total
+      }),
+    [packs, levels, handle],
+  )
+  if (completed.length === 0) return null
+  return (
+    <section className={`${CARD} p-5`}>
+      <h2 className="text-xl font-bold text-white text-center mb-4">{t.ltcl_lb_packs}</h2>
+      <div className="flex flex-wrap justify-center gap-2">
+        {completed.map((pack) => (
+          <PackBanner key={pack.id} pack={pack} levels={levels} />
+        ))}
+      </div>
+    </section>
+  )
+}
+
+function UserDetail({ entry, rank, levels }: { entry: LbEntry; rank: number; levels: LtclLevel[] }) {
   const { t } = useI18n()
   const { user, profile: authProfile } = useAuth()
+  const { packs } = useLtclPacks()
   const name = useDisplayName(entry.handle)
   // Many LTCL names are leftovers from the old list and were never registered
   // here — only link to a gdlt-hub profile when one actually exists.
@@ -232,6 +286,8 @@ function UserDetail({ entry, rank }: { entry: LbEntry; rank: number }) {
           </Stat>
         </div>
 
+        <CompletedPacks packs={packs} levels={levels} handle={entry.handle} />
+
         <section className={`${CARD} p-5`}>
           <h2 className="text-xl font-bold text-white text-center mb-3">{t.ltcl_lb_challenges}</h2>
           <p className="text-center text-neutral-400 text-sm mb-3">{t.ltcl_lb_main_legacy(main, legacy)}</p>
@@ -280,7 +336,7 @@ export default function LtclLeaderboard() {
       <div className="p-4">
         <Link to="/ltcl/leaderboard" className="relative z-10 inline-block text-neutral-400 hover:text-white text-sm">← {t.ltcl_tab_leaderboard}</Link>
         <div className="mt-4">
-          <UserDetail entry={board[idx]} rank={idx + 1} />
+          <UserDetail entry={board[idx]} rank={idx + 1} levels={levels} />
         </div>
       </div>
     )

@@ -4,10 +4,11 @@ import { useI18n } from '../i18n'
 import { useCan } from '../permissions'
 import { useIsAdmin } from '../useIsAdmin'
 import LtclAdminLevels from './LtclAdminLevels'
+import LtclAdminPacks from './LtclAdminPacks'
 import LtclAdminRules from './LtclAdminRules'
 import LtclAdminMerge from './LtclAdminMerge'
 
-type Tab = 'levels' | 'rules' | 'merge'
+type Tab = 'levels' | 'packs' | 'rules' | 'merge'
 
 // The LTCL staff panel, mounted at /ltcl/admin. Consolidates every LTCL admin
 // function (level/record management, rules) in one place. Each tab is gated by
@@ -27,12 +28,15 @@ export default function LtclAdminPage() {
   // it needs the same access level as level management (list-admin), not the
   // records-only capability moderators get — matches firestore.rules.
   const canMerge = isAdmin || canManageLevels
+  // Packs group levels, so managing them needs the same access as levels.
+  const canPacks = isAdmin || canManageLevels
   const [tab, setTab] = useState<Tab>(canLevels ? 'levels' : canRules ? 'rules' : 'merge')
 
   if (!canLevels && !canRules && !canMerge) return <Navigate to="/ltcl" replace />
 
   const tabs: { id: Tab; label: string }[] = [
     ...(canLevels ? [{ id: 'levels' as Tab, label: t.ltcl_admin_levels }] : []),
+    ...(canPacks ? [{ id: 'packs' as Tab, label: t.ltcl_admin_packs }] : []),
     ...(canRules ? [{ id: 'rules' as Tab, label: t.ltcl_admin_rules }] : []),
     ...(canMerge ? [{ id: 'merge' as Tab, label: t.ltcl_admin_merge }] : []),
   ]
@@ -56,6 +60,7 @@ export default function LtclAdminPage() {
         ))}
       </div>
       {tab === 'levels' && canLevels && <LtclAdminLevels />}
+      {tab === 'packs' && canPacks && <LtclAdminPacks />}
       {tab === 'rules' && canRules && <LtclAdminRules />}
       {tab === 'merge' && canMerge && <LtclAdminMerge />}
     </div>

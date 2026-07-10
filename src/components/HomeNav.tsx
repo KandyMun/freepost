@@ -6,7 +6,9 @@ export default function HomeNav() {
   const { t } = useI18n()
 
   const navClass = ({ isActive }: { isActive: boolean }) =>
-    `text-sm transition-colors ${isActive ? 'text-white' : 'text-neutral-400 hover:text-white'}`
+    `text-sm font-medium px-3 py-1.5 rounded-lg transition-colors ${
+      isActive ? 'bg-violet-600 text-white' : 'text-neutral-400 hover:text-white hover:bg-neutral-800/60'
+    }`
 
   return (
     <>
