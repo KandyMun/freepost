@@ -29,15 +29,15 @@ const lt = {
 
   // Home
   home_tagline: 'Centralizuota vieta GD Lietuvos bendruomenei',
-  home_freepost_desc: 'Kelk nuotraukas ir kvailiok su draugais.',
+  home_freepost_desc: 'Kelk nesąmones, nežinau.',
   home_ltcl_desc: 'Lietuvos iššūkių sąrašas.',
-  home_bounty_desc: 'Siūlyk pinigus už lygio įveikimą.',
-  home_search_desc: 'Rask žmones visame hub\'e.',
+  home_bounty_desc: 'Siūlyk premijas už lygio įveikimą.',
+  home_search_desc: 'Ieškok žmonių visame hub\'e.',
   home_changelog_title: 'Naujausi pakeitimai',
   home_changelog_view_all: 'Visas žurnalas',
   home_changelog_more: (n: number) => `+${n} daugiau`,
   home_achievements_desc: 'Didžiausi Lietuvos Geometry Dash pasiekimai — sunkiausi demonai, challenge\'ai ir geriausi žaidėjai.',
-  home_demon_desc: 'Sunkiausio Lietuvos extreme demono istorija.',
+  home_demon_desc: 'Sunkiausio Lietuvos Extreme Demono istorija.',
 
   // Hub pages (achievements + hardest demon)
   achievements_title: 'Pasiekimai',
@@ -336,7 +336,7 @@ const lt = {
     'GDLT Hub — centralizuota vieta Geometry Dash Lietuvos bendruomenei. Iš čia gali patekti į įvairius bendruomenei sukurtus įrankius ir erdves — pradedant nuo freepost, o daugiau bus netrukus.',
 
   // User search
-  user_search_title: 'Rasti žmonių',
+  user_search_title: 'Ieškoti žmones',
   user_search_placeholder: 'Ieškoti vartotojų…',
   user_search_none: (q: string) => `Nėra vartotojų pagal „${q}“`,
 

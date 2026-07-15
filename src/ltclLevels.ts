@@ -327,17 +327,11 @@ export function manualCustom(level: string, text: string): ChangelogEntry {
   return { level: level.trim(), text: text.trim(), raw: true }
 }
 
-// A "provisional placement" note an admin can attach when adding a level that
-// hasn't gathered enough opinions yet — it flags that the spot is tentative and
-// may still shift. `raw` so the home page only bolds the lead level and renders
-// the rest as plain prose.
-export function provisionalEntry(name: string): ChangelogEntry {
-  return {
-    level: name.trim(),
-    text: 'kol kas neturi pakankamai nuomonių, todėl jo pozicija sąraše gali keistis.',
-    raw: true,
-  }
-}
+// Parenthetical appended to an "added" line when the placement is provisional —
+// the level hasn't gathered enough opinions yet, so its spot may still shift.
+// Every word here is a changelog STOPWORD, so the home-page highlighter leaves
+// it as plain prose.
+export const PROVISIONAL_NOTE = 'trūksta nuomonių, vieta gali keistis'
 
 // Names of levels shoved from a ranked spot (≤#100) into Legacy (>#100) going
 // from `before` to `after`, excluding the level the admin explicitly acted on.
@@ -410,10 +404,13 @@ export function applyAdd(
   const inserted = [...before]
   inserted.splice(idx, 0, level)
   const after = renumber(inserted)
+  // When provisional, fold the "lacks opinions" note into the added line itself
+  // as a parenthetical, just before the closing period.
+  const neighbor = neighborClause(after, idx).replace(/\.\s*$/, '')
+  const tail = provisional ? ` (${PROVISIONAL_NOTE})` : ''
   const entries: ChangelogEntry[] = [
-    { level: level.name, text: `įdėtas į ${idx + 1} vietą${neighborClause(after, idx)}` },
+    { level: level.name, text: `įdėtas į ${idx + 1} vietą${neighbor}${tail}.` },
   ]
-  if (provisional) entries.push(provisionalEntry(level.name))
   const drops = legacyDropNames(before, after, level.levelId)
   if (drops.length) entries.push(legacyEntry(drops))
   return { list: after, entries }

@@ -1,5 +1,11 @@
 # Changelog
 
+## [v0.6.2.2] - 2026-07-15
+
+### Pakeista
+- „Preliminari pozicija" pastaba dabar rašoma toje pačioje „įdėtas" žurnalo eilutėje kaip prierašas „(trūksta nuomonių, vieta gali keistis)"
+- Šiek tiek perfrazuoti kai kurie tinklalapio elementai
+
 ## [v0.6.2.1] - 2026-07-15
 
 ### Pridėta
