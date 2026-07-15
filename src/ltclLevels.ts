@@ -327,6 +327,18 @@ export function manualCustom(level: string, text: string): ChangelogEntry {
   return { level: level.trim(), text: text.trim(), raw: true }
 }
 
+// A "provisional placement" note an admin can attach when adding a level that
+// hasn't gathered enough opinions yet — it flags that the spot is tentative and
+// may still shift. `raw` so the home page only bolds the lead level and renders
+// the rest as plain prose.
+export function provisionalEntry(name: string): ChangelogEntry {
+  return {
+    level: name.trim(),
+    text: 'kol kas neturi pakankamai nuomonių, todėl jo pozicija sąraše gali keistis.',
+    raw: true,
+  }
+}
+
 // Names of levels shoved from a ranked spot (≤#100) into Legacy (>#100) going
 // from `before` to `after`, excluding the level the admin explicitly acted on.
 function legacyDropNames(before: LtclLevel[], after: LtclLevel[], excludeId: number): string[] {
@@ -383,8 +395,15 @@ export interface PlanResult {
   entries: ChangelogEntry[]
 }
 
-// Insert a new level at `target` (default: end of the list).
-export function applyAdd(list: LtclLevel[], level: LtclLevel, target?: number): PlanResult {
+// Insert a new level at `target` (default: end of the list). When `provisional`
+// is set, an extra changelog note is staged flagging that the level still lacks
+// opinions and its placement may change.
+export function applyAdd(
+  list: LtclLevel[],
+  level: LtclLevel,
+  target?: number,
+  provisional?: boolean,
+): PlanResult {
   const before = [...list].sort(byPlacement)
   const t = target ?? before.length + 1
   const idx = Math.max(0, Math.min(before.length, t - 1))
@@ -394,6 +413,7 @@ export function applyAdd(list: LtclLevel[], level: LtclLevel, target?: number): 
   const entries: ChangelogEntry[] = [
     { level: level.name, text: `įdėtas į ${idx + 1} vietą${neighborClause(after, idx)}` },
   ]
+  if (provisional) entries.push(provisionalEntry(level.name))
   const drops = legacyDropNames(before, after, level.levelId)
   if (drops.length) entries.push(legacyEntry(drops))
   return { list: after, entries }

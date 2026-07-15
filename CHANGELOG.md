@@ -1,5 +1,15 @@
 # Changelog
 
+## [v0.6.2.1] - 2026-07-15
+
+### Pridėta
+- LTCL sąraše lygius galima rikiuoti pagal enjoyment (ne tik pagal vietą) — virš sąrašo atsirado du mygtukai „Pagal vietą" ir „Pagal enjoyment". Rikiuojant pagal enjoyment aukščiausiai įvertinti lygiai rodomi viršuje, o neįvertinti nukeliauja į apačią; vietos numeris (#N) visada rodo tikrąją poziciją sąraše.
+- Kiekvienas LTCL sąrašo elementas dešinėje rodo vidutinį lygio enjoyment (pvz. „8.5/10"), suapvalintą iki dviejų skaitmenų po kablelio ir be nereikalingų nulių.
+- Pridedant lygį į LTCL, administratorius gali pažymėti „Preliminari pozicija" — tada į pakeitimų žurnalą papildomai įrašoma pastaba, kad lygiui dar trūksta nuomonių ir jo vieta sąraše gali keistis. Žymė rodoma tik pridedant naują lygį.
+
+### Pakeista
+- Naršyklės skirtuko pavadinimas dabar keičiasi pagal atvertą puslapį, pvz. „GDLT Hub - LTCL", „GDLT Hub - Freepost", „GDLT Hub - Pasiekimai" ir t. t. Pagrindiniame puslapyje rodoma tiesiog „GDLT Hub".
+
 ## [v0.6.2] - 2026-07-15
 
 ### Pridėta

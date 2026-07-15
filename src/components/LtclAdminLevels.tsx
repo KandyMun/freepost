@@ -147,8 +147,8 @@ export default function LtclAdminLevels() {
   // separately. (Calling setLog inside a setDraft updater double-appends, since
   // React invokes updaters more than once — e.g. under StrictMode.)
   const onStageAdd = useCallback(
-    (lvl: LtclLevel, placement: number) => {
-      const { list, entries } = applyAdd(draft, lvl, placement)
+    (lvl: LtclLevel, placement: number, provisional: boolean) => {
+      const { list, entries } = applyAdd(draft, lvl, placement, provisional)
       setDraft(list)
       setLog((p) => [...p, ...entries])
     },

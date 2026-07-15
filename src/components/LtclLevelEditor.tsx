@@ -19,7 +19,7 @@ interface Props {
   // Metadata/record edits save immediately; placement changes (add/move/remove)
   // are staged on the parent's draft and only written when the admin commits.
   onSaveMeta: (level: LtclLevel) => Promise<void>
-  onStageAdd: (level: LtclLevel, placement: number) => void
+  onStageAdd: (level: LtclLevel, placement: number, provisional: boolean) => void
   onStageMove: (levelId: number, placement: number) => void
   onStageRemove: (levelId: number) => void
 }
@@ -221,6 +221,9 @@ export default function LtclLevelEditor({
 
   const [thumbnail, setThumbnail] = useState(base.thumbnail ?? '')
   const [thumbUploading, setThumbUploading] = useState(false)
+  // When adding a level, flag it as a provisional placement — stages an extra
+  // changelog note that it still lacks opinions and its spot may move.
+  const [provisional, setProvisional] = useState(false)
 
   const [users, setUsers] = useState<UserRow[]>([])
   useEffect(() => {
@@ -313,7 +316,7 @@ export default function LtclLevelEditor({
       if (isNew) {
         // Adds stage entirely (the new level's metadata lives only in the draft
         // until commit).
-        onStageAdd(next, placementNum)
+        onStageAdd(next, placementNum, provisional)
       } else {
         // Metadata/records write now; a placement change is staged as a move.
         await onSaveMeta(next)
@@ -434,6 +437,21 @@ export default function LtclLevelEditor({
             {t.ltcl_list_points}: <span className="text-white font-semibold">{previewPoints}</span>
             {placementNum > 100 && <span className="text-amber-400 ml-2">{t.ltcl_list_legacy}</span>}
           </p>
+
+          {isNew && !metaLocked && (
+            <label className="flex items-start gap-2 text-sm text-neutral-300 rounded-lg border border-neutral-800 bg-neutral-950/40 p-3">
+              <input
+                type="checkbox"
+                checked={provisional}
+                onChange={(e) => setProvisional(e.target.checked)}
+                className="accent-violet-500 mt-0.5"
+              />
+              <span className="flex flex-col gap-0.5">
+                <span>{t.ltcl_edit_provisional}</span>
+                <span className="text-neutral-500 text-xs">{t.ltcl_edit_provisional_hint}</span>
+              </span>
+            </label>
+          )}
 
           {!metaLocked && (
             <div className="flex flex-col gap-1">

@@ -7,6 +7,7 @@ import { useIsAdmin } from '../useIsAdmin'
 import { useCan } from '../permissions'
 import { useSiteConfig } from '../useSiteConfig'
 import { useI18n } from '../i18n'
+import { usePageTitle } from '../usePageTitle'
 import { type Post } from '../types'
 import AuthPage from './AuthPage'
 import NotificationsPanel from './NotificationsPanel'
@@ -42,6 +43,7 @@ export default function Layout() {
   const { t } = useI18n()
   const navigate = useNavigate()
   const location = useLocation()
+  usePageTitle()
   const [menuOpen, setMenuOpen] = useState(false)
   const [showAuth, setShowAuth] = useState(false)
   const [notifPost, setNotifPost] = useState<Post | null>(null)

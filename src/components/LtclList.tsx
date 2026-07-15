@@ -210,12 +210,29 @@ export default function LtclList() {
     setSearchParams({ level: String(id) }, { replace: true })
   }
 
+  // Ranks always reflect list placement; the sort only changes display order.
   const ranked = useMemo(
     () => levels.map((level, i) => ({ level, rank: level.placement ?? i + 1 })),
     [levels],
   )
+
+  const [sort, setSort] = useState<'placement' | 'enjoyment'>('placement')
+  const sorted = useMemo(() => {
+    if (sort === 'placement') return ranked
+    // Highest average enjoyment first; unrated levels sink to the bottom, ties
+    // fall back to placement.
+    return [...ranked].sort((a, b) => {
+      const ea = averageEnjoyment(a.level)
+      const eb = averageEnjoyment(b.level)
+      if (ea === null && eb === null) return a.rank - b.rank
+      if (ea === null) return 1
+      if (eb === null) return -1
+      return eb - ea || a.rank - b.rank
+    })
+  }, [ranked, sort])
+
   const q = search.toLowerCase().trim()
-  const visible = q ? ranked.filter((r) => r.level.name.toLowerCase().includes(q)) : ranked
+  const visible = q ? sorted.filter((r) => r.level.name.toLowerCase().includes(q)) : sorted
   const current = levels.find((l) => l.levelId === selectedId) ?? levels[0]
   const currentRank = current ? current.placement ?? levels.indexOf(current) + 1 : 0
 
@@ -234,10 +251,28 @@ export default function LtclList() {
           onChange={(e) => setSearch(e.target.value)}
           className="bg-neutral-800 text-white rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-violet-500 placeholder:text-neutral-500"
         />
+        <div className="grid grid-cols-2 gap-1 text-xs font-medium">
+          {(['placement', 'enjoyment'] as const).map((s) => (
+            <button
+              key={s}
+              onClick={() => setSort(s)}
+              className={`px-2 py-1.5 rounded-lg transition-colors ${
+                sort === s
+                  ? 'bg-violet-600 text-white'
+                  : 'bg-neutral-800 text-neutral-400 hover:bg-neutral-700'
+              }`}
+            >
+              {s === 'placement' ? t.ltcl_list_sort_placement : t.ltcl_list_sort_enjoyment}
+            </button>
+          ))}
+        </div>
         <div className="flex flex-col gap-1 max-h-[70vh] overflow-y-auto">
           {visible.map(({ level, rank }, i) => {
             const prevRank = i > 0 ? visible[i - 1].rank : 0
-            const showLegacyDivider = rank > LEGACY_AFTER && prevRank <= LEGACY_AFTER
+            // The Legacy divider only makes sense while ordered by placement.
+            const showLegacyDivider =
+              sort === 'placement' && rank > LEGACY_AFTER && prevRank <= LEGACY_AFTER
+            const avg = averageEnjoyment(level)
             return (
               <div key={level.levelId}>
                 {showLegacyDivider && (
@@ -261,6 +296,14 @@ export default function LtclList() {
                     #{rank}
                   </span>
                   <span className="truncate font-medium">{level.name}</span>
+                  <span
+                    className={`ml-auto shrink-0 tabular-nums text-xs ${
+                      current?.levelId === level.levelId ? 'text-white/80' : 'text-neutral-500'
+                    }`}
+                    title={t.ltcl_list_avg_enjoyment}
+                  >
+                    {avg === null ? '–' : `${parseFloat(avg.toFixed(2))}/10`}
+                  </span>
                 </button>
               </div>
             )

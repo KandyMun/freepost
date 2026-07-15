@@ -34,7 +34,8 @@ export interface Motd {
 export const MOTD_MAX_LENGTH = 200
 
 // The community's calendar day drives selection, so every visitor agrees on
-// "today" regardless of their own clock or timezone.
+// "today" regardless of their own clock or timezone. The message rolls over at
+// Vilnius midnight.
 function todayStr(): string {
   return new Intl.DateTimeFormat('en-CA', {
     timeZone: 'Europe/Vilnius',
