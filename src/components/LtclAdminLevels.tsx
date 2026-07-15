@@ -11,6 +11,7 @@ import {
   applyMove,
   applyRemove,
   commitStagedChanges,
+  consolidateLegacyEntries,
   LEGACY_AFTER,
   type LtclLevel,
   type ChangelogEntry,
@@ -126,6 +127,8 @@ export default function LtclAdminLevels() {
   const [log, setLog] = useState<ChangelogEntry[]>([])
   const [committing, setCommitting] = useState(false)
   const pending = log.length > 0
+  // What actually gets written (and previewed): legacy drops/returns merged.
+  const previewLog = useMemo(() => consolidateLegacyEntries(log), [log])
 
   // Keep the draft in sync with the live list while nothing is staged. This is
   // a deliberate external→state sync (Firestore snapshot → editable draft).
@@ -229,7 +232,7 @@ export default function LtclAdminLevels() {
       {pending && (
         <div className="rounded-lg border border-amber-500/40 bg-amber-950/30 p-3 flex flex-col gap-2">
           <div className="flex items-center justify-between gap-3">
-            <span className="text-amber-300 text-sm font-medium">{t.ltcl_stage_pending(log.length)}</span>
+            <span className="text-amber-300 text-sm font-medium">{t.ltcl_stage_pending(previewLog.length)}</span>
             <div className="flex gap-2 shrink-0">
               <button
                 onClick={discard}
@@ -249,7 +252,7 @@ export default function LtclAdminLevels() {
           </div>
           <p className="text-neutral-500 text-xs">{t.ltcl_stage_hint}</p>
           <ul className="flex flex-col gap-1 max-h-40 overflow-y-auto">
-            {log.map((e, i) => (
+            {previewLog.map((e, i) => (
               <li key={i} className="text-xs text-neutral-400">
                 {e.level && <span className="text-neutral-200 font-medium">{e.level}</span>}{' '}
                 {e.text}

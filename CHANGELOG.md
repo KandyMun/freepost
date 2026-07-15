@@ -1,10 +1,16 @@
 # Changelog
 
+## [v0.6.2.3] - 2026-07-15
+
+### Pataisyta
+- LTCL sąrašo pakeitimų žurnalas dabar patikimai įrašomas pateikus pakeitimus. Anksčiau žurnalo įrašai buvo rašomi atskirai nuo lygių pakeitimų ir galėjo tyliai neprisidėti; dabar lygių pakeitimai ir žurnalo įrašai įrašomi kartu, vienu nedalomu veiksmu.
+- Į „legacy" išstumti lygiai per vieną pateikimą dabar surašomi į vieną bendrą įrašą (pvz. „Į legacy sąrašą išstumiami A, B ir C."), o ne po atskirą įrašą kiekvienam lygiui. Tas pat taikoma iš „legacy" grįžtantiems lygiams.
+
 ## [v0.6.2.2] - 2026-07-15
 
 ### Pakeista
-- „Preliminari pozicija" pastaba dabar rašoma toje pačioje „įdėtas" žurnalo eilutėje kaip prierašas „(trūksta nuomonių, vieta gali keistis)"
-- Šiek tiek perfrazuoti kai kurie tinklalapio elementai
+- „Preliminari pozicija" pastaba dabar rašoma toje pačioje „įdėtas" žurnalo eilutėje kaip prierašas „(trūksta nuomonių, vieta gali keistis)", o ne atskiru įrašu.
+- Šiek tiek perfrazuoti kai kurie svetainės tekstai.
 
 ## [v0.6.2.1] - 2026-07-15
 

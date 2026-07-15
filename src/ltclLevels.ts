@@ -214,7 +214,15 @@ export function useLtclLevels() {
 // `raw` marks a free-form (custom) entry: the home page renders its text as
 // plain prose and only highlights the lead level, instead of treating every
 // word as a level name (which is right only for the structured pattern lines).
-export type ChangelogEntry = { level: string; text: string; raw?: boolean }
+// `tag`/`names` are in-memory only (never persisted): they let a staged batch's
+// many legacy-drop / legacy-return entries be merged into one line at commit.
+export type ChangelogEntry = {
+  level: string
+  text: string
+  raw?: boolean
+  tag?: 'legacy' | 'legacyReturn'
+  names?: string[]
+}
 
 // Local date in Lithuania as YYYY-MM-DD (groups entries by day on the page).
 function changelogDate(): string {
@@ -252,11 +260,46 @@ function legacyEntry(names: string[]): ChangelogEntry {
       names.length === 1
         ? `Į legacy sąrašą išstumiamas ${names[0]}.`
         : `Į legacy sąrašą išstumiami ${joinNames(names)}.`,
+    tag: 'legacy',
+    names,
   }
 }
 
 function legacyReturnEntry(names: string[]): ChangelogEntry {
-  return { level: '', text: `Į sąrašą grįžta ${joinNames(names)}.` }
+  return {
+    level: '',
+    text:
+      names.length === 1
+        ? `Į sąrašą grįžta ${names[0]}.`
+        : `Į sąrašą grįžta ${joinNames(names)}.`,
+    tag: 'legacyReturn',
+    names,
+  }
+}
+
+// Merge a batch's legacy entries: all levels pushed to legacy collapse into one
+// line, all levels pulled back into another. A level that both dropped and
+// returned in the same batch cancels out. Non-legacy entries keep their order;
+// the combined legacy lines are appended after them (they read as the net
+// effect of the whole commit).
+export function consolidateLegacyEntries(entries: ChangelogEntry[]): ChangelogEntry[] {
+  const kept: ChangelogEntry[] = []
+  const dropped: string[] = []
+  const returned: string[] = []
+  for (const e of entries) {
+    if (e.tag === 'legacy') dropped.push(...(e.names ?? []))
+    else if (e.tag === 'legacyReturn') returned.push(...(e.names ?? []))
+    else kept.push(e)
+  }
+  const dropSet = new Set(dropped)
+  const retSet = new Set(returned)
+  const uniq = (xs: string[]) => [...new Set(xs)]
+  const netDrop = uniq(dropped).filter((n) => !retSet.has(n))
+  const netReturn = uniq(returned).filter((n) => !dropSet.has(n))
+  const out = [...kept]
+  if (netDrop.length) out.push(legacyEntry(netDrop))
+  if (netReturn.length) out.push(legacyReturnEntry(netReturn))
+  return out
 }
 
 // ─── Manual changelog builders (pure) ────────────────────────────────────────
@@ -496,10 +539,35 @@ export async function deleteChangelogEntry(id: string): Promise<void> {
   await deleteDoc(doc(db, 'changelog', id))
 }
 
-// Commit a batch of staged edits: write the difference between the live list and
-// the draft (adds → full docs, moves/shifts → placement+points, removals →
-// deletes), then append the staged changelog entries in order (later action =
-// newer). Changelog writes are best-effort and never undo the list changes.
+// Queue changelog writes onto an existing batch. The page shows entries
+// newest-ts first, so within one committed batch the first staged entry must get
+// the highest ts to stay on top — this keeps the committed order identical to
+// the staged preview (and to the seed script's convention). A later commit still
+// sorts above an earlier one, since Date.now() advances between commits by far
+// more than a batch's entry count. Only `level`/`text`/`date`/`ts`/`raw` are
+// persisted — the in-memory `tag`/`names` fields are dropped.
+function stageChangelogWrites(batch: ReturnType<typeof writeBatch>, entries: ChangelogEntry[]): void {
+  const base = Date.now()
+  const date = changelogDate()
+  const n = entries.length
+  entries.forEach((e, i) => {
+    batch.set(doc(collection(db, 'changelog')), {
+      level: e.level,
+      text: e.text,
+      date,
+      ts: base + (n - 1 - i),
+      ...(e.raw ? { raw: true } : {}),
+    })
+  })
+}
+
+// Commit a batch of staged edits: the difference between the live list and the
+// draft (adds → full docs, moves/shifts → placement+points, removals → deletes)
+// AND the changelog entries go into ONE atomic batch, so the changelog can never
+// silently fail to apply after the list already changed — they share the same
+// permissions, so either both land or neither does. Legacy drops/returns are
+// merged into single lines first. (A batch caps at 500 writes; the whole list is
+// well under that, so a single commit is safe.)
 export async function commitStagedChanges(
   live: LtclLevel[],
   draft: LtclLevel[],
@@ -528,37 +596,16 @@ export async function commitStagedChanges(
       )
     }
   }
+  stageChangelogWrites(batch, consolidateLegacyEntries(entries))
   await batch.commit()
-
-  try {
-    await commitChangelogEntries(entries)
-  } catch {
-    // Non-fatal — the list changes already committed.
-  }
 }
 
-// Append a batch of changelog entries to the `changelog` collection. The page
-// shows entries newest-ts first, so within one committed batch the first staged
-// entry must get the highest ts to stay on top — this keeps the committed order
-// identical to the staged preview (and to the seed script's convention). A later
-// commit still sorts above an earlier one, since Date.now() advances between
-// commits by far more than a batch's entry count. Used by the staged list flow
-// and the manual changelog tab. No-op on an empty list.
+// Write a batch of changelog entries to the `changelog` collection. Used by the
+// manual changelog tab. No-op on an empty list.
 export async function commitChangelogEntries(entries: ChangelogEntry[]): Promise<void> {
-  if (entries.length === 0) return
-  const clBatch = writeBatch(db)
-  const base = Date.now()
-  const date = changelogDate()
-  const n = entries.length
-  entries.forEach((e, i) => {
-    clBatch.set(doc(collection(db, 'changelog')), {
-      level: e.level,
-      text: e.text,
-      date,
-      ts: base + (n - 1 - i),
-      // Only stored when true — keeps auto/pattern entries free of the field.
-      ...(e.raw ? { raw: true } : {}),
-    })
-  })
-  await clBatch.commit()
+  const merged = consolidateLegacyEntries(entries)
+  if (merged.length === 0) return
+  const batch = writeBatch(db)
+  stageChangelogWrites(batch, merged)
+  await batch.commit()
 }
